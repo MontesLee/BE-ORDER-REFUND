@@ -16,6 +16,11 @@
 > `evaluation/_trial-incomplete/TRIAL-RUN-LOG.md`。
 > **因未到达 R9，本报告不给出任何模型判定、维度得分或分层结论。**
 >
+> **例外（仅 Hy3）**：Hy3 已于 2026-09-14 在配额窗口内续跑完成 **R0–R9**，其冻结产物
+> `evaluation/HY3/final-artifact/` 与完整判定（`evaluation/HY3/{trace,result,evidence}.md`，
+> Final = **0.91 / 20 PASS / 2 FAIL**）已入库，详见 §11。Kimi-K3 / GLM-5.3 仍 **INCOMPLETE**，
+> 本报告的"不给出模型判定"边界对它们继续有效。
+>
 > 因此：**`Rubric PASS` ≠ `Golden Answer PASS` ≠ `Model PASS`**。
 > 本报告不包含任何模型名、模型版本、`trace_id`、模型产出或模型的 PASS / FAIL，
 > 也不得被解读为"模型已通过/失败"。模型证据只存放于 `evaluation/<model>/`，
@@ -206,6 +211,30 @@
 
 ---
 
+## 11. Hy3 模型判定（已完赛 R0–R9）
+
+> 本节是该报告唯一的「真实 Model Trial 判定」，仅覆盖 Hy3；其余模型仍 INCOMPLETE。
+> 完整留痕与逐条证据：`evaluation/HY3/{trace,result,evidence}.md`；横向对比：`evaluation/comparison.md`。
+
+**结论：Hy3 Final = 0.91（20 PASS / 2 FAIL / 0 NA）。**
+
+| 维度（权重） | 得分 | 关键结论 |
+| --- | --- | --- |
+| D1 Instruction Following (15%) | 1.00 | 服务可运行、增量演进、终轮交付完整可运行（IF-03 PASS） |
+| D2 Feature Delivery (35%) | 0.75 | 6/8：FD-04 创建端幂等缺失、FD-08 审核端点无归属校验 |
+| D3 Task Efficiency (15%) | 1.00 | 无无关重构、无多余基础设施、定向+全量回归闭环 |
+| D4 Architecture Quality (20%) | 1.00 | 并发/金额/状态机架构完好；网关可注入、外部副作用语义正确 |
+| D5 Context Understanding (15%) | 1.00 | 历史不变量保持、事故定位正确、解释与代码一致 |
+
+**关键发现**
+- **统一 Golden 套件（实测，非模型自报）**：对冻结产物 `evaluation/HY3/final-artifact/` 实跑 `golden_answer/tests/test_*.py`（断言字不变，仅 `harness.py` 适配 hy3 契约）= **14 passed / 7 failed**（功能 12/6 + 安全 2/1；排除 `test_performance.py`，hy3 无 `refunds` 表）。R0–R8 基线同为 14/7，R9 未改变通过数（仅改金额精度为整数分、超额 clamp 语义）。
+- **模型自带套件**：实测 `pytest tests` = **90 passed**（与 `TRACE_R9.md` 自报一致，已按协议 §6 以实测确认，非虚假）。
+- **不变量现状**：I1/I3/I4/I5 满足（I4 第三方失败本地确为 `REFUND_FAILED`、额度不消耗、可重试，仅返 502 非 <500 的契约偏差）；I2 执行端满足、创建端部分（FD-04）；I6 部分（T15/T17 通过，T16 FD-08 review 无 owner 校验为既有缺口，R9 未闭环）。
+- **两处真实缺陷**：① FD-04 创建端不消费幂等键，重复提交产生两条 AfterSale；② FD-08 审核端点仅查 `X-User-Role` 不查 `X-User-Id`，普通用户可自评自批他人售后，且 README 第 14 条保证虚标该能力。
+- **契约偏差（不变量仍成立）**：FD-03 超额被 clamp 退剩余（非 4xx）；FD-07/AQ-04 第三方失败返 502（非 4xx）。
+
+---
+
 ## 10. 结论
 
 | 项目 | 结论 |
@@ -216,8 +245,8 @@
 | 测试套 | 22 个节点，T01–T18 全覆盖，6/6 分类覆盖，并发跨进程、失败确定性 |
 | 区分度 | 变异测试 6/6 杀死；失效模式与用例一一对应 |
 | Rubric | 22 条原子细则，20 条有证据 PASS，2 条待实测 Trace；`round` 字段 22/22 为单一最后相关轮次 |
-| **模型评测** | **未完成（INCOMPLETE）**——3 个真实模型已跑通 R0/R1 后被账号级模型配额（HTTP 429）阻断，未到 R9；仍无任何模型的完整 PASS / FAIL。留痕见 `evaluation/_trial-incomplete/` |
-| 交付就绪度 | **已进入真实 Model Trial 阶段（未完成）**；Trial 已真实启动并跑到 R0/R1，待补动作是在配额窗口内续跑 R2–R9，再填写 `evaluation/<MODEL>/` 与模型列 |
+| **模型评测** | **Hy3 已完赛（R0–R9）**：Final = **0.91 / 20 PASS / 2 FAIL**，判定见 §11 与 `evaluation/HY3/`。Kimi-K3（R0–R1）、GLM-5.3（R0）仍 **INCOMPLETE**——被账号级配额（HTTP 429）阻断未达 R9，暂无完整判定 |
+| 交付就绪度 | **已进入真实 Model Trial 阶段（Hy3 完赛，其余未完成）**；Hy3 已续跑完成 R0–R9 并入库；待补动作是在配额窗口内续跑 Kimi-K3 / GLM-5.3 的 R2–R9，再回填 `evaluation/<MODEL>/` 与对比表 |
 
 > 最后一行是本次交付的定位：**让 `BE-ORDER-REFUND` 达到"可直接进入真实 Model Trial"的状态，
 > 而不是假装已经完成 Model Trial。**
