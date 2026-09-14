@@ -413,6 +413,7 @@ Security：
 
 ```
 BE-ORDER-REFUND/
+├── README.md                   仓库说明（状态 / 不变量 / 文件结构 / 快速开始）
 ├── instruction.md              本文件
 ├── introduction.md             题目与各模型表现简述
 ├── rubric.md                   22 条原子 Rubric
@@ -421,9 +422,15 @@ BE-ORDER-REFUND/
 ├── init/                       被测模型的起始工作区（本题目初始无自带文件）
 ├── golden_answer/              参考实现 + 测试套 + verify.sh
 ├── round-evidence/R0..R9/      每轮 prompt / test-result / evidence.json / reviewer.md
+├── evaluation/                 真实模型 Trial 结果区（trace.md / result.md / final-artifact/ / evidence.md；
+│                               当前仅 README.md 与 _TEMPLATE/，**无任何模型结果**）
 ├── test/README.md              测试套说明与"如何适配到被测模型产出"
 └── solve/README.md             golden answer 交付说明
 ```
+
+> `instruction.md` 是**评测方文档**，不下发给被测模型：模型在每轮只会收到
+> `round-evidence/R#/prompt.md` 的原文（见第 7 节），其中不含 Rubric、Golden Answer、
+> 不变量编号（I1–I6）、失效模式表与评分规则。
 
 四件套对应关系（Tlabel 口径）：`instruction.md` → 题目说明；`test/` → 测试用例说明；`solve/` → 参考实现；`evaluation-report.md` → 评测反馈报告。
 
@@ -434,13 +441,18 @@ BE-ORDER-REFUND/
 ```
 1. 用 init/ 建立被测工作区（每个模型一个独立新工作区，关闭记忆，最高思考等级）
 2. 逐轮原文发送 R0…R9；模型报错需 debug 时插入轮保持同风格
-3. 保留每个模型从 init 出发的最终产物
+3. 保留每个模型从 init 出发的最终产物 → 存到 evaluation/<model>/final-artifact/
 4. 用 golden_answer 的测试套对每个产物执行（按 test/README.md 做接口适配）
 5. 按 round-evidence/R#/evidence.json 逐轮判定 Rubric（PASS / FAIL / NOT_APPLICABLE）
 6. 按 §12 的权重汇总得分
+7. 回写 evaluation/<model>/ 的 trace.md / result.md / evidence.md（字段规范见 evaluation/README.md）
 ```
 
-**区分度实测口径**：题目锁定后必须用给定模型实测（HY3 / model_c / model_d；正式评测可用 Hy 3、Kimi 3、deepseek v4 flash、Claude Opus 5），确认至少在一个核心不变量或关键设计决策上出现分层。未完成实测不得入库。
+**区分度实测口径**：题目锁定后必须用给定模型实测（HY3 / model_c / model_d；正式评测可用 Hy 3、Kimi 3、deepseek v4 flash、Claude Opus 5），确认至少在一个核心不变量或关键设计决策上出现分层。**未完成实测不得入库。**
+
+> 本包当前状态：**已就绪，待实测**。上述第 1–7 步尚未执行，`evaluation/` 中除
+> `README.md` 与 `_TEMPLATE/` 外为空——**不伪造任何模型结果**。Golden Answer
+> 验证（题目与参考答案可执行、可判定）已完成，见 `evaluation-report.md` §5。
 
 ---
 

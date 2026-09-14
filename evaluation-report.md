@@ -2,18 +2,34 @@
 
 版本：`BE-ORDER-REFUND_202609141100` · 题目：多轮式后端开发 Agent Benchmark（订单售后退款服务）
 
+> **证据边界（先读）**
+>
+> 本报告包含的结论分两类，**不可互相推导**：
+>
+> | 类别 | 本报告中的位置 | 状态 |
+> | --- | --- | --- |
+> | **Golden Answer Validation**（题目与参考答案是否可执行、可判定） | §2 底线检查 · §3 出题评分 · §4 变异测试 · §5 验证结果 · §6 覆盖 | **已完成** |
+> | **Real Model Trial**（某模型跑完 R0–R9 后是否满足 Rubric） | —— | **尚未执行** |
+>
+> 因此：**`Rubric PASS` ≠ `Golden Answer PASS` ≠ `Model PASS`**。
+> 本报告不包含任何模型名、模型版本、`trace_id`、模型产出或模型的 PASS / FAIL，
+> 也不得被解读为"模型已通过/失败"。模型证据只存放于 `evaluation/<model>/`，
+> 目录与字段规范见 `evaluation/README.md`。
+
 ---
 
 ## 1. 交付物
 
 | 文件 | 说明 |
 | --- | --- |
+| `README.md` | 仓库说明：状态、六条不变量、文件结构、快速开始、实测结果、已知限制 |
 | `instruction.md` | 题目说明：核心矛盾、六条不变量、状态机、统一接口契约、R0–R9 Prompt 原文、每轮评分边界、失效模式清单、交付物与评测流程 |
 | `introduction.md` | 题目与模型表现简述（模型列待实测填写） |
 | `rubric.md` | 22 条原子 Rubric + 逐条 Verification + 基线判定 + 计分公式 |
-| `evidence-matrix.md` | Rubric → Evidence → Test 双向追溯矩阵 |
+| `evidence-matrix.md` | Rubric → Evidence → Test 双向追溯矩阵 + 六条不变量链路 |
 | `golden_answer/` | 完整可运行参考实现（8 个模块）+ 22 个测试 + `verify.sh` + `verify_doc/` |
 | `round-evidence/R0…R9/` | 每轮 `prompt.md` / `test-result.txt`（真实执行）/ `evidence.json` / `reviewer.md` |
+| `evaluation/` | 真实模型 Trial 结果区（**当前仅 `README.md` + `_TEMPLATE/`，无任何模型结果**） |
 | `init/` | 被测模型起始工作区（空） |
 | `test/README.md` | 测试套说明 + "如何适配被测模型产出" |
 | `solve/README.md` | 参考实现交付说明与设计取舍 |
@@ -81,10 +97,14 @@
 
 | 项目 | 命令 | 结果 |
 | --- | --- | --- |
-| 全量测试套 | `pytest tests -rA` | **22 passed / 0 failed / 0 error**，9.23s |
+| 全量测试套 | `pytest tests -rA` | **22 passed / 0 failed / 0 error**，7.29s |
 | 干净环境一键验证 | `./verify.sh`（新建 venv + `pip install -r requirements.txt`） | **exit code 0** |
 | 存储级不变量探测 | `python verify_doc/check_db_guards.py` | **6/6 通过** |
 | Golden test 覆盖率 | `python verify_doc/check_coverage_matrix.py` | **18/18 golden tests，6/6 分类** |
+
+> 以上为**最近一次真实执行**的结果（Python 3.13.14 / fastapi 0.141.1 / httpx 0.28.1 /
+> pytest 9.1.1 / uvicorn 0.52.4，干净 venv）。原始输出见
+> `golden_answer/verify_doc/test-result.txt`。重跑会覆盖该日志。
 
 存储级探测的实际输出（决定性证据，不依赖时序）：
 
@@ -190,5 +210,9 @@
 | Golden Answer | 本机跑通，22 个测试全绿，存储级保护 6/6，`verify.sh` 退出码 0，日志留痕 |
 | 测试套 | 22 个节点，T01–T18 全覆盖，6/6 分类覆盖，并发跨进程、失败确定性 |
 | 区分度 | 变异测试 6/6 杀死；失效模式与用例一一对应 |
-| Rubric | 22 条原子细则，20 条有证据 PASS，2 条待实测 Trace |
-| 入库建议 | **可以入库**；唯一待补动作是用 HY3 / model_c / model_d 完成实测并填写模型列与 `trace_id` |
+| Rubric | 22 条原子细则，20 条有证据 PASS，2 条待实测 Trace；`round` 字段 22/22 为单一最后相关轮次 |
+| **模型评测** | **未执行（PENDING REAL TRIAL）**——无任何模型名 / `trace_id` / 模型 PASS-FAIL；模板已就绪于 `evaluation/README.md` |
+| 交付就绪度 | **可以进入真实 Model Trial 阶段**；待补动作是用 HY3 / model_c / model_d 完成实测并填写 `evaluation/<model>/` 与模型列 |
+
+> 最后一行是本次交付的定位：**让 `BE-ORDER-REFUND` 达到"可直接进入真实 Model Trial"的状态，
+> 而不是假装已经完成 Model Trial。**

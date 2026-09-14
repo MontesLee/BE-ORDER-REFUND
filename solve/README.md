@@ -74,8 +74,15 @@ pytest tests -v
 
 ## 5. 明确不包含的内容
 
-- **不包含任何模型的产出**：没有真实模型 Trace 时不得伪造，因此 `model_*/`
-  目录留空，由实测环节填充。
+- **不包含任何模型的产出**：没有真实模型 Trace 时不得伪造。模型产物存放在
+  仓库根的 `evaluation/<model>/`（`trace.md` / `result.md` / `final-artifact/` / `evidence.md`），
+  **该目录当前只有 `README.md` 与 `_TEMPLATE/`，没有任何模型结果**。
 - **不包含"标准答案式"的唯一解**：参考解只是 baseline。模型用别的机制达成同样的
   不变量（例如换 Postgres 行锁、用乐观锁版本号）同样可以拿满分。
 - **不包含隐藏的评测逻辑**：所有断言都在 `tests/` 里明文可见，没有暗桩。
+
+## 6. 这份参考解算哪一类证据
+
+**Golden Evidence**——回答"参考答案本身是否满足 Benchmark 要求"，**不回答**
+"某个模型是否通过"。两者的边界见 `../evaluation/README.md` §1 与
+`../rubric.md` §4。

@@ -7,6 +7,27 @@
 
 ---
 
+## 0. 状态：已完成 / 未完成（先看这里）
+
+| | 内容 |
+| --- | --- |
+| ✅ **已完成** | Benchmark 设计（R0–R9 连续 10 轮）· Golden Answer 参考实现 · 22 条自动化测试 · `verify.sh` 一键验证 · 6 条核心不变量自动化 · 22 条原子 Rubric · Rubric→Evidence→Test 双向追溯 · 变异测试区分度实证 |
+| ⏳ **未完成** | **真实模型 Trial** · 模型 Trace / `trace_id` · 模型维度得分 · 模型间分层分析 |
+| 📍 **待实测处** | `evaluation/`（模板见 `evaluation/README.md`）· `introduction.md` §4 · `round-evidence/*/reviewer.md` 的占位表 |
+
+> **本仓库尚未执行任何真实 Coding Agent Trial。**
+> 因此：没有模型名 / 模型版本 / `trace_id` / 模型输出，也没有任何模型的 PASS / FAIL。
+> 文中出现的所有 `PASS` 都是 **Golden Answer、测试套、题目质量** 的判定结果，
+> **不是模型评测结果**。三者关系：
+>
+> ```
+> Rubric PASS  ≠  Golden Answer PASS  ≠  Model PASS
+> ```
+>
+> 模型证据只存放在 `evaluation/<model>/`，在真实 Trial 发生前该目录为空（仅模板）。
+
+---
+
 ## 1. 这是什么
 
 本仓库是一套**可直接入库的评测题交付包**，包含四件套（题目 / 测试 / 参考实现 / 评测反馈报告）
@@ -74,9 +95,17 @@ BE-ORDER-REFUND/
 │   │   └── README.md
 │   ├── requirements.txt · pytest.ini · README.md · .gitignore
 │
-├── round-evidence/             逐轮留痕
+├── round-evidence/             逐轮留痕（Golden 侧）
 │   └── R0…R9/                  每轮 prompt.md · test-result.txt · evidence.json · reviewer.md
 │                               （R3 另含 mutation-test.py 与 mutation-report.json）
+│
+├── evaluation/                 真实模型 Trial 结果存放区（**当前无任何模型结果**）
+│   ├── README.md               口径：Golden Evidence vs Model Evidence · 目录结构 · 判定流程
+│   └── _TEMPLATE/              空白模板（下划线前缀 = 非真实结果）
+│       ├── trace.md            调用留痕：request id / trace id
+│       ├── result.md           模型级结论：环境 / 完成轮数 / 测试与 Rubric 结果 / 人工复核
+│       ├── evidence.md         逐条 Rubric 判定表
+│       └── final-artifact/     模型最终工作区（复制模板后填写）
 │
 ├── test/README.md              测试套说明 + 「如何适配被测模型产出」（6 步流程）
 └── solve/README.md             参考实现交付说明与设计取舍一览
@@ -158,6 +187,9 @@ uvicorn app.main:app --reload          # 交互式文档 http://127.0.0.1:8000/d
 
 - **无真实模型 Trace 时模型列不填**：`introduction.md` §4 与 `round-evidence/*/reviewer.md`
   的模型表现表保留「待填」，不伪造；须在实测环节补 `trace_id`。
+- **真实模型 Trial 尚未执行**：`evaluation/` 目前只有 `README.md` 与 `_TEMPLATE/`，
+  没有 HY3 / model_c / model_d 的目录或结果；`introduction.md` §4 的模型列一律「待填」。
+  按试标规则要求**不伪造 Trace**，须在实测环节补 `trace_id` 与逐条判定。
 - **参考解只是 baseline**：模型用别的机制（如换 Postgres 行锁、乐观锁版本号）达成同样不变量，同样可拿满分。
 - **崩溃窗口**：认领成功但第三方未回写时进程挂掉会留下 `REFUNDING` 与预留额度，由
   `POST /maintenance/reconcile` 显式释放——这是 SQLite 单机方案的真实边界，不是缺陷。

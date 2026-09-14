@@ -4,6 +4,16 @@
 `golden_answer/tests/`，本文件说明它测什么、怎么跑、以及**怎么把它接到被测模型
 的产出上**。
 
+> **这套测试产生的是哪一类证据？**
+>
+> | 被执行对象 | 产生的证据 | 存放位置 | 当前状态 |
+> | --- | --- | --- | --- |
+> | `golden_answer/`（参考实现） | **Golden Evidence**：参考答案满足要求 | `golden_answer/verify_doc/` · `round-evidence/` | **已完成**（22 passed） |
+> | 某模型的最终产出 | **Model Evidence**：该模型满足 Rubric | `evaluation/<model>/`（`result.md` / `evidence.md`） | **尚未执行**（无任何模型结果） |
+>
+> 两者共用同一套断言，但结论**不可互相推导**：Golden 全绿 ≠ 任何模型通过。
+> §4 的适配流程就是"把同一套断言接到模型产出上"的那一步。
+
 ---
 
 ## 1. 目录

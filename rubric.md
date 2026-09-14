@@ -17,6 +17,25 @@ D5 Context Understanding  15%   CU-01 … CU-03
 **Evidence 类型**只允许 `TEST > CODE > TRACE > DOC > REVIEW`。
 每条 Must Rubric 至少有一条 Evidence；客观 Rubric 必须有自动化证据。
 
+**Round 字段口径（Tlabel）**：`round` **只填一个轮次**。若一条 Rubric 涉及多个轮次，
+填**最后一个相关轮次**——即该命题最后一次被「引入 / 加强 / 判定」的轮次，
+而不是范围。轮次跨度与判定依据写在 §2 的 `Trigger` 里，`round` 字段不复述范围。
+
+> 判定示例（说明"最后一个相关轮次"如何得出，不是机械取最大值）：
+>
+> | Rubric | 相关轮次 | round | 依据 |
+> | --- | --- | --- | --- |
+> | FD-03 | R1 引入累计上限 → R3 要求并发下仍成立 | **R3** | 要求被 R3 加强 |
+> | FD-05 | R1 隐含 → R2 幂等 → R3 跨进程并发 | **R3** | 要求被 R3 加强 |
+> | FD-06 | R2 状态机 → R6 新增 `REFUND_FAILED` / 重试且成功不得重复 | **R6** | R6 扩展了状态机要求 |
+> | AQ-01 | R3 提出跨进程保护；R4 只是对同一要求的 Review 复核 | **R3** | R4/R5 未新增要求，仅复核与解释 |
+> | AQ-02 | R3 持久化守卫 → R7 明确"Refund 数量增长后不退化 / 无界加载" | **R7** | 命题中的"数据增长"由 R7 提出 |
+> | TE-02 | R4 定向回归 → R6 确定性复现 → R8 全量套件 | **R8** | 闭环在 R8 收口 |
+> | IF-02 / CU-01 / TE-01 | 覆盖全流程（R1/R3–R9） | **R9** | 只能在末轮判定 |
+>
+> 规则是「要求最后一次成为最终形态的轮次」，**不是**「最后一次重复测它的轮次」，
+> 否则几乎所有 Rubric 都会退化成 R9。
+
 ---
 
 ## 1. 细则总表
@@ -24,29 +43,30 @@ D5 Context Understanding  15%   CU-01 … CU-03
 | ID | 判断命题（Yes/No） | 维度 | Round | 优先级 | 显/隐 | 客/主 | Evidence |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | IF-01 | 项目能在 clean environment 按 README 启动并运行 | D1 | R0 | Must | Explicit | Objective | R0-E01, R0-E04 |
-| IF-02 | 后续轮次在已有项目上增量演进，没有无必要的大规模重写 | D1 | R1–R9 | Must | Implicit | Subjective | R1…R9 Trace/REVIEW |
+| IF-02 | 后续轮次在已有项目上增量演进，没有无必要的大规模重写 | D1 | R9 | Must | Implicit | Subjective | R1…R9 Trace/REVIEW |
 | IF-03 | 最终 source / tests / README / requirements / verification 完整且可运行 | D1 | R9 | Must | Explicit | Objective | R9-E01, R9-E02, R9-E03, R8-E01 |
 | FD-01 | 只有满足支付与审核条件的 AfterSale 才能退款 | D2 | R0 | Must | Explicit | Objective | R0-E02, R0-E03 |
 | FD-02 | 一个订单支持多个 AfterSale 与部分退款 | D2 | R1 | Must | Explicit | Objective | R1-E01 |
-| FD-03 | 成功退款金额累计不超过 `paid_amount` | D2 | R1/R3 | Must | Explicit | Objective | R1-E01, R1-E02, R1-E03, R3-E02 |
+| FD-03 | 成功退款金额累计不超过 `paid_amount` | D2 | R3 | Must | Explicit | Objective | R1-E01, R1-E02, R1-E03, R3-E02 |
 | FD-04 | 重复业务请求不产生多个有效退款结果 | D2 | R2 | Must | Explicit | Objective | R2-E01, R2-E02 |
-| FD-05 | 一个 AfterSale 最多一条成功 Refund | D2 | R2/R3 | Must | Explicit | Objective | R2-E03, R3-E01 |
-| FD-06 | 非法状态转换被拒绝，`REFUNDED` 为终态 | D2 | R2/R6 | Must | Explicit | Objective | R2-E04, R2-E05, R2-E06, R6-E03 |
+| FD-05 | 一个 AfterSale 最多一条成功 Refund | D2 | R3 | Must | Explicit | Objective | R2-E03, R3-E01 |
+| FD-06 | 非法状态转换被拒绝，`REFUNDED` 为终态 | D2 | R6 | Must | Explicit | Objective | R2-E04, R2-E05, R2-E06, R6-E03 |
 | FD-07 | 第三方失败后进入可重试状态，重试成功后进入 `REFUNDED` | D2 | R6 | Must | Explicit | Objective | R6-E01, R6-E02 |
 | FD-08 | 用户不能操作他人资源，也不能绕过审核执行退款 | D2 | R7 | Must | Explicit | Objective | R7-E01, R7-E02, R7-E03, R7-E05 |
-| TE-01 | 修复问题时没有进行无关的大规模重构 | D3 | R4–R9 | Nice | Implicit | Subjective | R4…R9 Trace/REVIEW |
-| TE-02 | 存在可单独执行的定向回归用例，且全量套件可运行（diagnose→fix→targeted regression→full regression 闭环） | D3 | R4/R6/R8 | Must | Explicit | Objective | R4-E02, R4-E03, R6-E04, R8-E01, R8-E02 |
-| TE-03 | 没有为小型 SQLite 服务引入明显不必要的基础设施 | D3 | R3/R6/R7 | Nice | Implicit | Subjective | R3-E05 |
+| TE-01 | 修复问题时没有进行无关的大规模重构 | D3 | R9 | Nice | Implicit | Subjective | R4…R9 Trace/REVIEW |
+| TE-02 | 存在可单独执行的定向回归用例，且全量套件可运行（diagnose→fix→targeted regression→full regression 闭环） | D3 | R8 | Must | Explicit | Objective | R4-E02, R4-E03, R6-E04, R8-E01, R8-E02 |
+| TE-03 | 没有为小型 SQLite 服务引入明显不必要的基础设施 | D3 | R7 | Nice | Implicit | Subjective | R3-E05 |
 | AQ-01 | 核心并发约束不依赖单进程内存锁，而由对 multi-worker 有效的持久化/数据库机制保护 | D4 | R3 | Must | Implicit | Objective+Subjective | R3-E01, R3-E03, R3-E04, R5-E03 |
-| AQ-02 | 金额上限与 AfterSale 幂等约束在并发与数据增长下有可靠的持久化保护 | D4 | R3 | Must | Implicit | Objective+Subjective | R3-E04, R3-E05, R7-E04 |
-| AQ-03 | 状态转换边界清晰，普通业务路径不能绕过状态机 | D4 | R5/R6 | Must | Implicit | Subjective | R5-E01, R5-E02, R6-E03 |
+| AQ-02 | 金额上限与 AfterSale 幂等约束在并发与数据增长下有可靠的持久化保护 | D4 | R7 | Must | Implicit | Objective+Subjective | R3-E04, R3-E05, R7-E04 |
+| AQ-03 | 状态转换边界清晰，普通业务路径不能绕过状态机 | D4 | R6 | Must | Implicit | Subjective | R5-E01, R5-E02, R6-E03 |
 | AQ-04 | 第三方失败不会错误记录为本地成功，且第三方调用可确定性测试 | D4 | R6 | Must | Explicit | Objective+Subjective | R6-E01, R6-E05 |
-| AQ-05 | 能说明当前方案、合理替代方案、选择原因及 SQLite/multi-worker 限制 | D4 | R3/R5 | Nice | Explicit | Subjective | R3-E05, R5-E04 |
-| CU-01 | 后续修改始终保持此前建立的核心 invariant | D5 | R3–R9 | Must | Implicit | Objective | R3-E02, R6-E02, R9-E01 |
+| AQ-05 | 能说明当前方案、合理替代方案、选择原因及 SQLite/multi-worker 限制 | D4 | R5 | Nice | Explicit | Subjective | R3-E05, R5-E04 |
+| CU-01 | 后续修改始终保持此前建立的核心 invariant | D5 | R9 | Must | Implicit | Objective | R3-E02, R6-E02, R9-E01 |
 | CU-02 | 能根据事故定位真实原因并针对性修复 | D5 | R6 | Must | Implicit | Objective+Subjective | R6-E02, R6-E03 |
 | CU-03 | 模型解释与实际代码一致 | D5 | R5 | Must | Implicit | Subjective | R5-E01, R5-E02, R5-E03, R5-E04 |
 
 计数：Instruction Following 3 · Feature Delivery 8 · Task Efficiency 3 · Architecture Quality 5 · Context Understanding 3 = **22**。
+Round 字段全部为**单一轮次**，无区间、无斜杠（见上方 Round 字段口径）。
 
 ---
 
@@ -175,7 +195,27 @@ R9 不新增维度，只做全量历史回归。后续轮次可以检查历史�
 
 ---
 
-## 4. Golden Answer 基线结果
+## 4. Golden Answer 基线结果（**不是模型评测结果**）
+
+> **这一节判定的是"参考答案本身是否满足 Benchmark 要求"（Golden Answer Validation），
+> 不等于任何模型的评测结果。**
+>
+> ```
+> Golden Answer Validation      ← 本节内容：证明题目与参考答案可执行、可判定
+>         ↓（完成这一步 ≠ 完成模型评测）
+> Real Model Trial              ← 尚未执行
+>         ↓
+> Model Trace + Final Artifact
+>         ↓
+> Rubric Evaluation             ← 用同一套 Rubric，对模型产物逐条判定
+>         ↓
+> Model Result
+> ```
+>
+> 真实模型得分必须来自实测：`evaluation/<model>/` 下的 `trace.md` +
+> `final-artifact/` + `evidence.md`（模板见 `evaluation/README.md`）。
+> **在真实 Trial 完成前，不得声称任何模型 PASS / FAIL。**
+> 下面表格中的 `Result` 全部只代表 Golden Answer 基线。
 
 参考实现上逐条判定（依据 `round-evidence/*/evidence.json`）：
 

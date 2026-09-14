@@ -24,14 +24,16 @@
 
 ```
 BE-ORDER-REFUND/
+├── README.md               仓库说明：状态 / 六条不变量 / 文件结构 / 快速开始 / 已知限制
 ├── instruction.md          题目说明（含 R0–R9 Prompt 原文与评分边界）
 ├── introduction.md         本文件：题目与模型表现简述
 ├── rubric.md               22 条原子 Rubric
-├── evidence-matrix.md      Rubric → Evidence 追溯矩阵
+├── evidence-matrix.md      Rubric → Evidence → Test 追溯矩阵
 ├── evaluation-report.md    评测反馈报告（含质量校验结论）
 ├── init/                   被测模型的起始工作区（本题初始无自带文件 → 空目录）
 ├── golden_answer/          参考实现 + 22 个测试 + verify.sh + verify_doc
 ├── round-evidence/R0…R9/   每轮 prompt.md / test-result.txt / evidence.json / reviewer.md
+├── evaluation/             真实模型 Trial 结果区（**当前仅 README.md + _TEMPLATE/，无模型结果**）
 ├── test/README.md          测试套说明与"如何适配被测模型产出"
 └── solve/README.md         参考实现交付说明
 ```
@@ -42,17 +44,20 @@ BE-ORDER-REFUND/
 | --- | --- |
 | `init/` 项目初始态 | `init/`（空） |
 | `golden_answer/` | `golden_answer/`（含 `verify_doc/`，即 README、可执行测试套、运行日志） |
-| `model_A_name/` 等模型产物 | 待实测后按模型名创建（**当前为空，不伪造**） |
+| `model_A_name/` 等模型产物 | `evaluation/<model>/`（`trace.md` / `result.md` / `final-artifact/` / `evidence.md`）；**待实测后创建，当前不存在任何模型目录** |
 | `introduction.md` | 本文件（§4 模型表现表） |
 | 其他留痕 | `round-evidence/`、`evidence-matrix.md`、`evaluation-report.md` |
 
 ---
 
-## 3. Golden Answer 基线（已完成实测）
+## 3. Golden Answer 基线（已完成实测；**不是模型评测结果**）
+
+> 本节只证明"题目 + 参考答案可执行、可判定"。**模型评测尚未执行**，
+> 模型结果须由 `evaluation/<model>/` 的实测留痕产生（见 `evaluation/README.md`）。
 
 | 指标 | 结果 | 证据 |
 | --- | --- | --- |
-| 测试套 | **22 passed / 0 failed**（干净 venv，9.23s） | `golden_answer/verify_doc/test-result.txt` |
+| 测试套 | **22 passed / 0 failed**（干净 venv，7.29s） | `golden_answer/verify_doc/test-result.txt` |
 | 存储级不变量保护 | **6/6 通过**（第二条成功退款被唯一索引拒绝；超额写入被 CHECK 拒绝；跨连接写锁互斥） | 同上 / `verify_doc/db-guard-check.txt` |
 | Golden test 覆盖 | **18/18**（T01–T18），R8 六类分类 **6/6** | `verify_doc/coverage-matrix-check.txt` |
 | `verify.sh` | **exit code 0** | 同上 |
