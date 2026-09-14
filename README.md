@@ -15,6 +15,20 @@
 | ✅ **已完成** | **真实模型评测（单模型）：Hy3** —— 已完成 R0–R9，冻结产物与 22 条 Rubric 判定已入库，**Final = 0.91**（20 PASS / 2 FAIL）。见 `evaluation/HY3/` 与 `evaluation/comparison.md` |
 | 🚫 **不在本次交付范围** | 其它模型（试标占位名 `model_c` / `model_d`，即 Kimi-K3 / GLM-5.3）：**未评测、无判定**。其仅到 R0/R1 的历史留痕存于 `evaluation/_trial-history/` |
 
+**当前验证状态**（只列实测数据；任何一处与实际结果不一致时，**以真实测试结果为准**）：
+
+| 项 | 实测值 |
+| --- | --- |
+| Golden Answer | **PASS** —— `pytest tests -rA` → **22 passed / 0 failed / 0 error**（exit 0） |
+| Golden 存储级守卫 | **6/6**（`verify_doc/check_db_guards.py`） |
+| Golden 覆盖矩阵 | **18/18**，R8 六类分类 **6/6**（`verify_doc/check_coverage_matrix.py`） |
+| Hy3 Trial | **COMPLETE**（R0–R9） |
+| Hy3 Final Score | **0.91** |
+| Hy3 Rubric | **20 PASS / 2 FAIL**（FAIL = FD-04, FD-08） |
+| Rubrics | **22** |
+| Rounds | **R0–R9**（10 轮） |
+| 题目质量门 | **S1–S6 = 17/18 → PASS** |
+
 > **本仓库包含一次完整的真实 Coding Agent 评测（Hy3，R0–R9 全程）。**
 > 模型级结论与逐条证据在 `evaluation/HY3/`，冻结产物在 `evaluation/HY3/final-artifact/`。
 > `evaluation/_trial-history/` 保存的是 2026-09-14 一次多模型 Trial 被配额（HTTP 429）中断时的历史留痕，
@@ -55,6 +69,13 @@
 | I5 | 多 worker 并发下 I1/I2 仍成立 | `BEGIN IMMEDIATE` + `busy_timeout=30s` + 上述数据库约束（**非** `threading.Lock`） |
 | I6 | 不能访问他人订单/售后，不能绕过审核 | `assert_can_view` 归属校验（跨租户 **404**）+ `approve/execute` 仅 `AGENT` |
 
+**不变量分层**（仅为便于评审快速抓重点，**不改变测试与业务逻辑**——六条全部照常自动化验证）：
+
+| 层级 | 不变量 | 为什么在这一层 |
+| --- | --- | --- |
+| **Primary** | **I1** 金额上限（不可超额退款）· **I2** 一个 AfterSale 最多一条成功退款 · **I4** 第三方失败不得标记本地成功 | 直接决定「钱会不会算错 / 会不会重复出款」。这题的核心不是「功能多」，而是围绕这三条反复施压 |
+| **Supporting** | **I3** 状态机合法性 · **I5** 多 worker 并发安全 · **I6** 用户权限隔离 | 保障与放大层：I3 约束「什么时候允许动钱」，I5 决定 Primary 在多进程下是否依然成立，I6 决定谁能触发 |
+
 > 关键设计：并发保护必须**跨进程**有效，所以用 SQLite 写锁 + 约束兜底，而不是进程内锁——后者在单进程测试中会通过，却是本题要抓的高发失效模式。
 
 ---
@@ -64,6 +85,7 @@
 ```
 BE-ORDER-REFUND/
 ├── README.md                   本文件
+├── DELIVERY-MAP.md             一页导航：每个文件/目录的角色，以及「想看什么该走哪条路径」
 ├── instruction.md              题目全文：概览 / 核心矛盾 / 六条不变量 / 状态机 / 实体模型 /
 │                               统一接口契约 / R0–R9 Prompt 原文 / 每轮评分边界 / 17 条失效模式
 ├── introduction.md             题目速览 + 包内容与交付格式映射 + Golden 基线 + 模型表现（Hy3 实测）
@@ -149,6 +171,18 @@ uvicorn app.main:app --reload          # 交互式文档 http://127.0.0.1:8000/d
 
 `verify.sh` 额外开关：`VERIFY_PYTHON=/path/to/python`（跳过建 venv）、`VERIFY_SKIP_VENV=1`（复用当前解释器）。
 
+### 3.1 如何评测一个模型（最短流程）
+
+```text
+1. 从 init/ 起：把 init/ 复制到一个全新工作区（一个模型一个，关闭记忆，最高思考等级）
+2. 按 R0–R9 顺序：逐轮原文发送 round-evidence/R#/prompt.md 的内容，不补解读、不预告后续轮次
+3. 跑验证：把模型产出按 test/README.md §4 适配（只改 harness.py），用 golden_answer/tests/ 的断言验证
+4. 按 rubric.md 评分：对照 round-evidence/R#/evidence.json 的同一套命题逐条判 PASS / FAIL / NOT_APPLICABLE
+5. 看真实样例：evaluation/HY3/ 是本次交付的真实模型实测（trace / result / evidence / raw-trace / final-artifact）
+```
+
+> 评分边界见 `instruction.md` §8（**不得提前扣分**）；证据优先级 `TEST > CODE > TRACE > DOC > REVIEW`。
+
 ---
 
 ## 4. 实测结果（Golden Answer 基线）
@@ -195,8 +229,9 @@ uvicorn app.main:app --reload          # 交互式文档 http://127.0.0.1:8000/d
 
 - **模型评测范围**：本次交付只评测 **Hy3**（已完成 R0–R9，见 `evaluation/HY3/`）。
   试标占位名 `model_c` / `model_d`（Kimi-K3 / GLM-5.3）**不在交付范围**：未评测、无判定；
-  其仅到 R0/R1 的历史留痕见 `evaluation/_trial-history/`。`introduction.md` §4 只填 Hy3 的实际值，
-  其余不虚构。
+  其仅到 R0/R1 的历史留痕见 `evaluation/_trial-history/`（`Historical / exploratory only.
+  Not part of the formal model trial.`）。`introduction.md` §4 只填 Hy3 的实际值，其余不虚构。
+  > **本次正式模型实测仅使用 Hy3。未进行其他模型实测，因此不做跨模型能力排序或模型区分度结论。**
 - **参考解只是 baseline**：模型用别的机制（如换 Postgres 行锁、乐观锁版本号）达成同样不变量，同样可拿满分。
 - **崩溃窗口**：认领成功但第三方未回写时进程挂掉会留下 `REFUNDING` 与预留额度，由
   `POST /maintenance/reconcile` 显式释放——这是 SQLite 单机方案的真实边界，不是缺陷。

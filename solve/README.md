@@ -74,9 +74,10 @@ pytest tests -v
 
 ## 5. 明确不包含的内容
 
-- **不包含任何模型的产出**：没有真实模型 Trace 时不得伪造。模型产物存放在
-  仓库根的 `evaluation/<model>/`（`trace.md` / `result.md` / `final-artifact/` / `evidence.md`），
-  **该目录当前只有 `README.md` 与 `_TEMPLATE/`，没有任何模型结果**。
+- **不包含任何模型的产出**：模型产物存放在仓库根的 `evaluation/<model>/`
+  （`trace.md` / `result.md` / `final-artifact/` / `evidence.md`）。本次交付只评测 Hy3，
+  完成态结果在 `../evaluation/HY3/`；`evaluation/_trial-history/` 是一次多模型 Trial
+  被配额中断时的历史留痕（非完成态，不在交付范围）。
 - **不包含"标准答案式"的唯一解**：参考解只是 baseline。模型用别的机制达成同样的
   不变量（例如换 Postgres 行锁、用乐观锁版本号）同样可以拿满分。
 - **不包含隐藏的评测逻辑**：所有断言都在 `tests/` 里明文可见，没有暗桩。

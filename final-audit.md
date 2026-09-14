@@ -89,7 +89,7 @@ R0 项目启动 → R1 细节补充(部分退款) → R2 需求改变(幂等) �
 | 项目 | 结果 |
 | --- | --- |
 | Golden evidence | **PASS** — `golden_answer/` + `round-evidence/` + `test/` 三段齐全；Rubric→Evidence→Test 双向可追溯；6 条不变量（I1–I6）均具备 Prompt 要求 → 参考实现 → 自动化验证 → Rubric 四段完整链路 |
-| Model evidence | **READY FOR TRIAL** — `evaluation/README.md` 已定义口径、目录结构、四类文件字段规范与 10 步判定流程；`evaluation/_TEMPLATE/` 提供空白模板；**无任何模型结果** |
+| Model evidence | **PASS（单模型）** — 已完成 Hy3 的 R0–R9 真实 Trial：冻结产物 `evaluation/HY3/final-artifact/`、逐条判定 `evaluation/HY3/{trace,result,evidence}.md`、单模型汇总 `evaluation/comparison.md`；口径与字段规范见 `evaluation/README.md`。试标占位名 `model_c` / `model_d` **不在交付范围**（未评测、无判定） |
 | 证据语义 | **PASS** — `Rubric PASS ≠ Golden Answer PASS ≠ Model PASS` 已在 5 处显式声明（`rubric.md` §4、`evidence-matrix.md` 开头、`evaluation-report.md` 开头、`README.md` §0、`evaluation/README.md` §1） |
 | Evidence 优先级 | PASS（统一 `TEST > CODE > TRACE > DOC > REVIEW`；客观项全部由 TEST 支撑） |
 

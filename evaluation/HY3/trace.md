@@ -1,6 +1,7 @@
 # trace — Hy3（BE-ORDER-REFUND 真实 Model Trial）
 
 > 评测方独立留痕。模型亲笔逐轮 trace 见 `final-artifact/TRACE_R2.md … TRACE_R9.md`（R0/R1 留痕缺失，见 §2）。
+> 逐轮原始留痕登记见 `raw-trace/R0.md … R9.md`（缺失轮显式标 `MISSING`）。
 > 本文件以**实测**为准，不采信模型自报数字（协议 §6）。
 
 ## 1. 会话信息
@@ -17,14 +18,38 @@
 
 ## 2. 逐轮留痕
 
-| 轮次 | Prompt 来源 | trace id | 模型报错 | 备注 |
-| --- | --- | --- | --- | --- |
-| R0 | `round-evidence/R0/prompt.md` | `TRIAL-RUN-LOG`（前序） | 否 | 前序真实运行 |
-| R1 | `round-evidence/R1/prompt.md` | 留痕缺失（已知缺陷 D-1） | 否 | 前序真实运行 |
-| R2…R8 | `round-evidence/R2…R8/prompt.md` | `TRACE_R2…R8`（模型亲笔） | 否 | 前序完成，独立复跑确认 |
-| R9 | `round-evidence/R9/prompt.md` | `agent-d00735d3`（本会话派发） | 否 | **本会话执行**，落地 90/90 |
+逐轮**原始留痕登记**（含每轮的 Prompt 来源 / 模型留痕 / 代码变化 / 独立核验）见
+`raw-trace/R0.md … R9.md`；下表为汇总。
+
+| 轮次 | Prompt 来源 | 模型亲笔留痕 | `model_trace_id`（真实 request id） | 模型报错 | 备注 |
+| --- | --- | --- | --- | --- | --- |
+| R0 | `round-evidence/R0/prompt.md` | `_trial-history/hy3/trace/R0.md` | `MISSING` | 否 | 前序真实运行（11 passed） |
+| R1 | `round-evidence/R1/prompt.md` | `MISSING` | `MISSING` | 否 | 前序真实运行（19 passed，快照在 `_trial-history/hy3/final-artifact-so-far/`） |
+| R2 | `round-evidence/R2/prompt.md` | `final-artifact/TRACE_R2.md` | `MISSING` | 否 | 前序完成，独立复跑 24 passed |
+| R3 | `round-evidence/R3/prompt.md` | `final-artifact/TRACE_R3.md` | `MISSING` | 否 | 前序完成，独立复跑 30 passed |
+| R4 | `round-evidence/R4/prompt.md` | `final-artifact/TRACE_R4.md` | `MISSING` | 否 | 前序完成，独立复跑 34 passed |
+| R5 | `round-evidence/R5/prompt.md` | `final-artifact/TRACE_R5.md` | `MISSING` | 否 | 前序完成，独立复跑 34 passed |
+| R6 | `round-evidence/R6/prompt.md` | `final-artifact/TRACE_R6.md` | `MISSING` | 否 | 前序完成，独立复跑 43 passed |
+| R7 | `round-evidence/R7/prompt.md` | `final-artifact/TRACE_R7.md` | `MISSING` | 否 | 前序完成，独立复跑 55 passed |
+| R8 | `round-evidence/R8/prompt.md` | `final-artifact/TRACE_R8.md`（评测方据产物重建） | `MISSING` | 是（429 截断回复，**但已落地**） | 独立复跑 76 passed |
+| R9 | `round-evidence/R9/prompt.md` | `final-artifact/TRACE_R9.md`（模型亲笔） | **`agent-d00735d3`** | 否 | **本会话执行**，落地 90/90 |
 
 > R0–R8 由前序会话在配额窗口内完成。本会话负责被 429 阻断的 **R9**（18:01 配额开窗后派发）。
+
+### 2.1 `model_trace_id` 现状（**不伪造**）
+
+| 项 | 值 |
+| --- | --- |
+| 唯一真实的派发 ID | `agent-d00735d3`（R9，本会话 Agent 派发标识） |
+| R0–R8 的 request id | `MISSING` —— 执行时未采集平台 request id，事后无可核验来源可恢复 |
+| 生成规则 | **不存在**。未根据文件名 / 模型名 / Git commit 生成过任何 ID |
+| 补充方式 | 只能在**下一轮 Trial 开始时**开启 request id 采集；已发生的 R0–R8 无法回填 |
+
+`MISSING` 表示「无真实来源」，**不表示「没跑过」**：每轮的执行真实性由工作区产物、
+模型亲笔留痕与评测方独立复跑共同证明（见 §3 与 `raw-trace/`）。
+
+> 另：平台在 R8 派发时返回的 **429 限频回执**中携带过 request id，
+> 但那是限频事件的标识，**不是某轮执行的 trace id**，仅作过程佐证记录于 `raw-trace/README.md` §4。
 
 ## 3. R9 执行与独立核验（关键）
 
@@ -53,9 +78,10 @@
 
 | 类型 | 路径 |
 | --- | --- |
+| 逐轮原始留痕登记（R0–R9，含 MISSING 标注） | `raw-trace/`（`README.md` + `R0.md … R9.md`） |
 | 逐轮 diff / 快照 | `D:\Workspace\trial-workspaces\_eval_progress\baseline_hy3_before_R9.txt`、`r9_pytest.txt`、`rerun_func.txt`、`rerun_sec.txt` |
 | 最终工作区（冻结） | `evaluation/HY3/final-artifact/` |
-| 模型亲笔 trace | `final-artifact/TRACE_R9.md` |
+| 模型亲笔 trace | `final-artifact/TRACE_R9.md`（R2–R9 同目录） |
 | Golden 适配层 | `evaluation/HY3/harness_test/`（`conftest.py` + `harness.py`，仅接口适配，未改断言） |
 | 基线（R0–R8） | `evaluation/HY3/GOLDEN_BASELINE_R0-R8.md` |
 | 冲突产物（过期） | `result.md`/`evidence.md`/`trace.md` @ 18:37–39（已被覆盖，不再引用） |

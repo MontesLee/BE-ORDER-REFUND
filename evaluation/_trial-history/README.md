@@ -1,5 +1,6 @@
 # _trial-history —— 2026-09-14 真实 Model Trial 历史留痕
 
+> **Historical / exploratory only. Not part of the formal model trial.**
 > **本目录是历史存档，不是评测结论的权威位置。**
 > 本次交付只评测一个模型：**Hy3（`hy3`）**，且已完成 R0–R9，结论在 `evaluation/HY3/`。
 > 本目录保存那一次多模型 Trial 中断时点的真实过程留痕，供追溯与复核。
@@ -37,6 +38,8 @@ _trial-history/
 ---
 
 ## 3. 边界声明
+
+**Historical / exploratory only. Not part of the formal model trial.**
 
 - **不含**任何伪造的模型名称、trace ID、模型输出或 PASS/FAIL。
 - 目录内使用 `final-artifact-so-far/` 命名，明确区别于完成态的 `final-artifact/`

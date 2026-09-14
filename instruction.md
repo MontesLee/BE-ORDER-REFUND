@@ -422,8 +422,9 @@ BE-ORDER-REFUND/
 ├── init/                       被测模型的起始工作区（本题目初始无自带文件）
 ├── golden_answer/              参考实现 + 测试套 + verify.sh
 ├── round-evidence/R0..R9/      每轮 prompt / test-result / evidence.json / reviewer.md
-├── evaluation/                 真实模型 Trial 结果区（trace.md / result.md / final-artifact/ / evidence.md；
-│                               当前仅 README.md 与 _TEMPLATE/，**无任何模型结果**）
+├── evaluation/                 真实模型 Trial 结果区
+│   ├── HY3/                    Hy3 完成态结果（trace.md / result.md / evidence.md / final-artifact/）
+│   ├── comparison.md           单模型（Hy3）汇总；_TEMPLATE/ 空白模板；_trial-history/ 历史留痕
 ├── test/README.md              测试套说明与"如何适配到被测模型产出"
 └── solve/README.md             golden answer 交付说明
 ```

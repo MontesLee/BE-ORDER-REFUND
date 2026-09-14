@@ -52,6 +52,7 @@ Model Result
 ```
 evaluation/
 ├── README.md                  本文件：口径、结构、判定流程
+├── comparison.md              单模型汇总（本交付仅一个模型：Hy3）
 ├── _TEMPLATE/                 空白模板（下划线前缀 = 非真实结果）
 │   ├── trace.md
 │   ├── result.md
@@ -60,14 +61,14 @@ evaluation/
 │       └── README.md
 │
 ├── HY3/                       真实 Trial 结果（已完成 R0–R9）
-│   ├── trace.md               调用留痕（隔离、路由校验、逐轮）
+│   ├── trace.md               调用留痕（隔离、路由校验、逐轮、trace ID 登记）
 │   ├── result.md              模型级结论（环境、完成轮数、测试与 Rubric 结果、人工复核）
 │   ├── evidence.md            逐条 Rubric 判定（ID / PASS-FAIL-NA / 证据类型 / 路径 / 理由）
+│   ├── raw-trace/             逐轮原始留痕登记（R0–R9；缺失轮显式标 MISSING）
 │   ├── harness_test/          Golden 断言的适配层（只改 harness.py 做接口适配）
-│   └── final-artifact/        模型从 init/ 出发的最终工作区（源码 + 测试 + README）
-├── _trial-history/            2026-09-14 中断的多模型 Trial 历史留痕（非完成态）
-├── comparison.md              横向对比（本交付仅一个模型：Hy3）
-└── _TEMPLATE/                 空白模板（下划线前缀 = 非真实结果）
+│   ├── GOLDEN_BASELINE_R0-R8.md   适配层在 R0–R8 产物上的基线结果
+│   └── final-artifact/        模型从 init/ 出发的最终工作区（冻结原件）
+└── _trial-history/            2026-09-14 中断的多模型 Trial 历史留痕（非完成态、不在交付范围）
 ```
 
 **命名**：目录名 = 评测报告里使用的模型名（如 `HY3`）。

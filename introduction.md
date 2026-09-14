@@ -33,7 +33,7 @@ BE-ORDER-REFUND/
 ├── init/                   被测模型的起始工作区（本题初始无自带文件 → 空目录）
 ├── golden_answer/          参考实现 + 22 个测试 + verify.sh + verify_doc
 ├── round-evidence/R0…R9/   每轮 prompt.md / test-result.txt / evidence.json / reviewer.md
-├── evaluation/             真实模型 Trial 结果区（**当前仅 README.md + _TEMPLATE/，无模型结果**）
+├── evaluation/             真实模型 Trial 结果区（HY3/ 为 Hy3 完成态结果；comparison.md 单模型汇总）
 ├── test/README.md          测试套说明与"如何适配被测模型产出"
 └── solve/README.md         参考实现交付说明
 ```
