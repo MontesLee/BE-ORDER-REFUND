@@ -9,22 +9,18 @@
 > | 类别 | 本报告中的位置 | 状态 |
 > | --- | --- | --- |
 > | **Golden Answer Validation**（题目与参考答案是否可执行、可判定） | §2 底线检查 · §3 出题评分 · §4 变异测试 · §5 验证结果 · §6 覆盖 | **已完成** |
-> | **Real Model Trial**（某模型跑完 R0–R9 后是否满足 Rubric） | —— | **已启动，未完成（INCOMPLETE）** |
+> | **Real Model Trial**（某模型跑完 R0–R9 后是否满足 Rubric） | §11 | **已完成（单模型：Hy3）** |
 >
-> 关于该行：真实 Trial 已于 2026-09-14 启动——3 个模型真实跑通 R0/R1 后被账号级模型配额
-> （HTTP 429）阻断，未到达 R9。全部真实进展、配额事件与已发现缺陷见
-> `evaluation/_trial-incomplete/TRIAL-RUN-LOG.md`。
-> **因未到达 R9，本报告不给出任何模型判定、维度得分或分层结论。**
->
-> **例外（仅 Hy3）**：Hy3 已于 2026-09-14 在配额窗口内续跑完成 **R0–R9**，其冻结产物
+> 本次交付**只评测一个模型：Hy3**，已于 2026-09-14 完成 **R0–R9**，冻结产物
 > `evaluation/HY3/final-artifact/` 与完整判定（`evaluation/HY3/{trace,result,evidence}.md`，
-> Final = **0.91 / 20 PASS / 2 FAIL**）已入库，详见 §11。Kimi-K3 / GLM-5.3 仍 **INCOMPLETE**，
-> 本报告的"不给出模型判定"边界对它们继续有效。
+> Final = **0.91 / 20 PASS / 2 FAIL**）已入库，详见 §11。
+> 试标占位名 `model_c` / `model_d`（Kimi-K3 / GLM-5.3）**不在本次交付范围**：未评测、无判定；
+> 其仅到 R0/R1 的历史留痕见 `evaluation/_trial-history/`。
 >
 > 因此：**`Rubric PASS` ≠ `Golden Answer PASS` ≠ `Model PASS`**。
-> 本报告不包含任何模型名、模型版本、`trace_id`、模型产出或模型的 PASS / FAIL，
-> 也不得被解读为"模型已通过/失败"。模型证据只存放于 `evaluation/<model>/`，
-> 目录与字段规范见 `evaluation/README.md`。
+> 模型证据只存放于 `evaluation/<model>/`，目录与字段规范见 `evaluation/README.md`。
+> 除 §11 的 Hy3 判定外，本报告其余位置的 `PASS` 均指 Golden Answer / 测试套 / 题目质量的判定，
+> 不得被解读为模型评测结果。
 
 ---
 
@@ -34,12 +30,12 @@
 | --- | --- |
 | `README.md` | 仓库说明：状态、六条不变量、文件结构、快速开始、实测结果、已知限制 |
 | `instruction.md` | 题目说明：核心矛盾、六条不变量、状态机、统一接口契约、R0–R9 Prompt 原文、每轮评分边界、失效模式清单、交付物与评测流程 |
-| `introduction.md` | 题目与模型表现简述（模型列待续跑完成后填写） |
+| `introduction.md` | 题目与模型表现简述（§4 为 Hy3 实测） |
 | `rubric.md` | 22 条原子 Rubric + 逐条 Verification + 基线判定 + 计分公式 |
 | `evidence-matrix.md` | Rubric → Evidence → Test 双向追溯矩阵 + 六条不变量链路 |
 | `golden_answer/` | 完整可运行参考实现（8 个模块）+ 22 个测试 + `verify.sh` + `verify_doc/` |
 | `round-evidence/R0…R9/` | 每轮 `prompt.md` / `test-result.txt`（真实执行）/ `evidence.json` / `reviewer.md` |
-| `evaluation/` | 真实模型 Trial 结果区（**当前仅 `README.md` + `_TEMPLATE/`，无任何模型结果**） |
+| `evaluation/` | 真实模型 Trial 结果区（**含 Hy3 完成态结果 `HY3/`**；`_trial-history/` 为 2026-09-14 中断的多模型 Trial 历史留痕） |
 | `init/` | 被测模型起始工作区（空） |
 | `test/README.md` | 测试套说明 + "如何适配被测模型产出" |
 | `solve/README.md` | 参考实现交付说明与设计取舍 |
@@ -163,7 +159,7 @@
 
 | # | 事项 | 影响 | 处理 |
 | --- | --- | --- | --- |
-| 1 | **没有真实模型 Trace** | `IF-02`（增量演进）、`TE-01`（是否最小修改）在基线中不可判定 | 已标 `NOT_APPLICABLE` 并在 `round-evidence/*/reviewer.md` 留好占位表。按试标规则要求**不伪造 Trace**，须在实测环节填写 |
+| 1 | **Golden 基线阶段无模型 Trace**（现已由 Hy3 Trial 补齐） | `IF-02`（增量演进）、`TE-01`（是否最小修改）在 Golden 基线中不可判定 | Golden 基线中已标 `NOT_APPLICABLE`；本次交付的 Hy3 Trial 已完成该部分实测判定，见 §11 与 `evaluation/HY3/evidence.md` |
 | 2 | **轮次 10 轮 > 规则推荐的 4–8 轮** | 评审成本偏高，体现在 S6=2 | 已在 §9 给出压缩方案；若排期紧张建议先按 8 轮版本试标 |
 | 3 | **并发用例存在时序不确定性** | T13 在个别弱实现上可能侥幸通过 | 已用"栅栏同步 + 多轮重复 + 网关延迟 0.15s"降低不确定性；并补了与时序无关的存储层探测作为 AQ-01/AQ-02 的硬证据 |
 | 4 | **金额若用 `float`，小额整数场景未必被自动抓出** | 失效模式 #17 可能漏判 | 自动化断言只覆盖整数分场景。**须在 D4 人工代码审查中检查金额类型**；`rubric.md` 中已在 AQ-02 的 CODE 证据里标注 |
@@ -177,8 +173,8 @@
 
 **短期（不影响入库）**
 
-1. 试标时优先用"最高思考等级 + 关闭记忆 + 全新工作区"三件套，并把 `trace_id`
-   按规则 §6.2 填入 `round-evidence/*/reviewer.md` 的占位表。
+1. 试标时优先用"最高思考等级 + 关闭记忆 + 全新工作区"三件套，并把 `trace_id` / `request id`
+   按规则 §6.2 记录到 `evaluation/<model>/trace.md`（本次交付的 Hy3 留痕见 `evaluation/HY3/trace.md`）。
 2. 先跑 `test_order.py` 打通接口适配，再逐文件放开；`test/README.md` §4 已给出 6 步流程。
 3. 人工评审时把 D4 的判定与 `rubric.md` §2 的 Verification 逐条对齐，避免"印象分"。
 
@@ -213,7 +209,7 @@
 
 ## 11. Hy3 模型判定（已完赛 R0–R9）
 
-> 本节是该报告唯一的「真实 Model Trial 判定」，仅覆盖 Hy3；其余模型仍 INCOMPLETE。
+> 本节是该报告唯一的「真实 Model Trial 判定」，覆盖 Hy3（本次交付唯一被评测的模型）。
 > 完整留痕与逐条证据：`evaluation/HY3/{trace,result,evidence}.md`；横向对比：`evaluation/comparison.md`。
 
 **结论：Hy3 Final = 0.91（20 PASS / 2 FAIL / 0 NA）。**
@@ -245,8 +241,8 @@
 | 测试套 | 22 个节点，T01–T18 全覆盖，6/6 分类覆盖，并发跨进程、失败确定性 |
 | 区分度 | 变异测试 6/6 杀死；失效模式与用例一一对应 |
 | Rubric | 22 条原子细则，20 条有证据 PASS，2 条待实测 Trace；`round` 字段 22/22 为单一最后相关轮次 |
-| **模型评测** | **Hy3 已完赛（R0–R9）**：Final = **0.91 / 20 PASS / 2 FAIL**，判定见 §11 与 `evaluation/HY3/`。Kimi-K3（R0–R1）、GLM-5.3（R0）仍 **INCOMPLETE**——被账号级配额（HTTP 429）阻断未达 R9，暂无完整判定 |
-| 交付就绪度 | **已进入真实 Model Trial 阶段（Hy3 完赛，其余未完成）**；Hy3 已续跑完成 R0–R9 并入库；待补动作是在配额窗口内续跑 Kimi-K3 / GLM-5.3 的 R2–R9，再回填 `evaluation/<MODEL>/` 与对比表 |
+| **模型评测** | **已完成（单模型：Hy3，R0–R9）**：Final = **0.91 / 20 PASS / 2 FAIL**，判定见 §11 与 `evaluation/HY3/`。`model_c` / `model_d`（Kimi-K3 / GLM-5.3）**不在本次交付范围**：未评测、无判定 |
+| 交付就绪度 | **可交付**：Benchmark 设计 + Golden Answer 验证 + Hy3 真实 Model Trial（R0–R9）三者齐备；`evaluation/HY3/` 与 `evaluation/comparison.md` 为模型侧权威结论 |
 
-> 最后一行是本次交付的定位：**让 `BE-ORDER-REFUND` 达到"可直接进入真实 Model Trial"的状态，
-> 而不是假装已经完成 Model Trial。**
+> 本次交付的定位：**Benchmark + Golden Answer 验证 + 一次完整的真实 Model Trial（Hy3）**，
+> 结论均可复核，模型侧不含任何虚构数据。

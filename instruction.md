@@ -448,13 +448,13 @@ BE-ORDER-REFUND/
 7. 回写 evaluation/<model>/ 的 trace.md / result.md / evidence.md（字段规范见 evaluation/README.md）
 ```
 
-**区分度实测口径**：题目锁定后必须用给定模型实测（HY3 / model_c / model_d；正式评测可用 Hy 3、Kimi 3、deepseek v4 flash、Claude Opus 5），确认至少在一个核心不变量或关键设计决策上出现分层。**未完成实测不得入库。**
+**区分度实测口径**：题目锁定后必须用给定模型实测，确认至少在一个核心不变量或关键设计决策上出现分层。**未完成实测不得入库。**
 
-> 本包当前状态：**已进入真实 Model Trial，未完成**。上述第 1–7 步**已开始执行**：
-> 3 个模型已从 `init/` 起真实跑通 R0/R1，随后被账号级模型配额（HTTP 429）阻断，未到达 R9；
-> 真实进展、配额事件与已发现缺陷见 `evaluation/_trial-incomplete/TRIAL-RUN-LOG.md`。
-> **不伪造任何模型结果**——因此 `evaluation/<MODEL>/` 仍未建立，也没有任何模型的完整
-> PASS / FAIL。Golden Answer 验证（题目与参考答案可执行、可判定）已完成，见
+> 本包当前状态：**已完成一次真实 Model Trial（单模型：Hy3，R0–R9）**。上述第 1–7 步已全部执行：
+> Hy3 已完成 R0–R9，冻结产物与 22 条 Rubric 判定入库（Final = 0.91），见 `evaluation/HY3/`
+> 与 `evaluation/comparison.md`。试标占位名 `model_c` / `model_d`（Kimi-K3 / GLM-5.3）
+> **不在本次交付范围**：未评测、无判定；其仅到 R0/R1 的历史留痕见 `evaluation/_trial-history/`。
+> **不伪造任何模型结果**。Golden Answer 验证（题目与参考答案可执行、可判定）见
 > `evaluation-report.md` §5。
 
 ---

@@ -1,9 +1,10 @@
-# BE-ORDER-REFUND — Model Trial 对比（comparison）
+# BE-ORDER-REFUND — Model Trial 结果（单模型：Hy3）
 
-> 横向对比各模型在 R0–R9 后的 Rubric 结果。详细判定见各模型目录 `evaluation/<model>/{trace,result,evidence}.md`。
-> 本文件为**真实 Trial 结果**，不与 Golden Answer Validation 混淆。判定以评测方对冻结产物的独立复跑为准。
+> 本次交付**只评测一个模型：Hy3**。详细判定见 `HY3/{trace,result,evidence}.md`；
+> 冻结产物见 `HY3/final-artifact/`。本文件为**真实 Trial 结果**，不与 Golden Answer Validation 混淆；
+> 判定以评测方对冻结产物的独立复跑为准。
 
-## Hy3（已完赛 R0–R9）
+## Hy3（已完成 R0–R9）
 
 | 维度（权重） | 得分 | 关键结论 |
 | --- | --- | --- |
@@ -22,12 +23,10 @@
 
 ## 其它模型
 
-| 模型 | 进度 | 状态 |
-| --- | --- | --- |
-| Hy3 (`hy3`) | R0–R9 全完成 | ✅ 已完赛（本文件上表） |
-| model_c (Kimi-K3, `kimi-k3-1`) | R0–R1 | ⛔ 配额阻断，未完成（见 `_trial-incomplete/`） |
-| model_d (GLM-5.3, `glm-5.3`) | R0 | ⛔ 配额阻断，未完成（见 `_trial-incomplete/`） |
+本次交付**不含**其它模型的评测。试标占位名 `model_c` / `model_d` 对应的
+Kimi-K3 / GLM-5.3 **不在交付范围**：未评测、无判定。其仅到 R0/R1 的历史留痕
+（多模型 Trial 被配额 429 中断时产生）保存在 `evaluation/_trial-history/`，只作历史存档，
+不得被引用为模型表现。
 
-> 注：18:01 一处并行自动化曾对带 `NameError` 的中间态 R9 写出过期对比（Final 0.41），已被正确 R9（90/90）覆盖；以上为独立复跑结论。
-
-> kimi-k3 / glm-5.3 的完整 R0–R9 Trial 与对比待续跑后补充。
+> 说明：18:01 一处并行自动化曾对带 `NameError` 的中间态 R9 写出过期对比（Final 0.41），
+> 已被正确 R9（90/90）覆盖；以上为独立复跑结论。

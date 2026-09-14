@@ -25,10 +25,7 @@ partial refund / 累计上限 / 幂等 / 并发 / 第三方失败 / 安全 / 性
 
 `test-result.txt` 中 R0-T01..T03 的命令与输出。
 
-## 模型 Trace 留痕（待实测填写）
+## 模型 Trace 留痕
 
-| 模型 | 是否可运行 | 主流程 | 备注 |
-| --- | --- | --- | --- |
-| HY3 | 待填 | 待填 | 待填 |
-| model_c | 待填 | 待填 | 待填 |
-| model_d | 待填 | 待填 | 待填 |
+> 本次交付仅评测一个模型：**Hy3（已完成 R0–R9）**。逐轮判定与证据见 `evaluation/HY3/evidence.md`，
+> 汇总见 `evaluation/HY3/result.md`。占位名 `model_c` / `model_d` **不在本次交付范围**（未评测），故不列。

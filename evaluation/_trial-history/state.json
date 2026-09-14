@@ -1,0 +1,85 @@
+{
+  "generated": "2026-09-14T13:23:54",
+  "updated": "2026-09-14T19:52:00",
+  "benchmark": "BE-ORDER-REFUND",
+  "scope": "SINGLE-MODEL EVALUATION - only Hy3. Kimi-K3 (model_c) and GLM-5.3 (model_d) are OUT OF SCOPE and NOT evaluated in this delivery.",
+  "trial_status": "HY3 COMPLETE - R0-R9 DONE, final-artifact frozen, 22 Rubric judged Final=0.91 (20 PASS / 2 FAIL: FD-04, FD-08). Authoritative results live in evaluation/HY3/ and evaluation/comparison.md.",
+  "authoritative_results": {
+    "model": "HY3",
+    "slug": "hy3",
+    "display": "Hy3",
+    "path": "evaluation/HY3/",
+    "final_score": 0.91,
+    "rubric_pass": 20,
+    "rubric_fail": 2,
+    "fails": ["FD-04", "FD-08"],
+    "golden_passed": 14,
+    "golden_failed": 7,
+    "self_tests_passed": 90,
+    "store_py_mtime": "2026-09-14T18:41:28",
+    "artifact_path": "evaluation/HY3/final-artifact/"
+  },
+  "out_of_scope_models": {
+    "model_c": {
+      "slug": "kimi-k3",
+      "display": "Kimi-K3",
+      "status": "NOT EVALUATED (out of scope for this delivery)",
+      "history_rounds_present": ["R0", "R1"]
+    },
+    "model_d": {
+      "slug": "glm-5.3",
+      "display": "GLM-5.3",
+      "status": "NOT EVALUATED (out of scope for this delivery)",
+      "history_rounds_present": ["R0"]
+    }
+  },
+  "history_of_interrupted_multi_model_trial": {
+    "note": "Records the true state of the 2026-09-14 multi-model trial when it was cut off by the account-level model quota (HTTP 429). Hy3 was later resumed and completed; its completed results are in evaluation/HY3/.",
+    "rounds_completed_at_interruption": {
+      "HY3": ["R0", "R1"],
+      "model_c": ["R0", "R1"],
+      "model_d": ["R0"]
+    },
+    "artifacts_sha256_16": {
+      "hy3": {
+        "final-artifact-so-far/app.py": "c049cb6ab84783e4",
+        "final-artifact-so-far/models.py": "2c9566c38100d975",
+        "final-artifact-so-far/schemas.py": "59177c7d4e4e0e83",
+        "final-artifact-so-far/store.py": "fb2e8b3e7fc7b8f7",
+        "final-artifact-so-far/tests/test_api.py": "0d4014aa78050233",
+        "final-artifact-so-far/README.md": "84140f3a1a283afc",
+        "final-artifact-so-far/requirements.txt": "cc6c0c3778cb3966",
+        "trace/R0.md": "4873f81b0ad29e20",
+        "self-test-verified.txt": "eaa4752d8494deaf"
+      },
+      "kimi-k3": {
+        "final-artifact-so-far/app/__init__.py": "e3b0c44298fc1c14",
+        "final-artifact-so-far/app/main.py": "6b70c1610515060f",
+        "final-artifact-so-far/app/models.py": "650f4127c6bccf4f",
+        "final-artifact-so-far/app/service.py": "ffb34d8eac0839cd",
+        "final-artifact-so-far/pytest.ini": "c809c969ec7e11b9",
+        "final-artifact-so-far/README.md": "b2d30c634bbf5136",
+        "final-artifact-so-far/requirements.txt": "5e9ced716190a7ba",
+        "final-artifact-so-far/tests/test_api.py": "7e37e38d391d3f45",
+        "trace/R0.md": "948bac1c3ef65008",
+        "trace/R1.md": "2333e00852e4e933",
+        "self-test-verified.txt": "8b09d90a764de6b6"
+      },
+      "glm-5.3": {
+        "final-artifact-so-far/app/__init__.py": "e3b0c44298fc1c14",
+        "final-artifact-so-far/app/main.py": "e84bb1a74f94485b",
+        "final-artifact-so-far/app/models.py": "51da2e1c5ed65bf3",
+        "final-artifact-so-far/app/store.py": "076285fa25d048f5",
+        "final-artifact-so-far/app/service.py": "bfcd21248a458396",
+        "final-artifact-so-far/README.md": "b7e15d921d89cd7e",
+        "final-artifact-so-far/requirements.txt": "f917dde9c68c9b0f",
+        "final-artifact-so-far/smoke_result.txt": "f61ba9026cd4441c",
+        "final-artifact-so-far/smoke_test.py": "9bfa0376d3b8ab3d",
+        "final-artifact-so-far/tests/__init__.py": "e3b0c44298fc1c14",
+        "final-artifact-so-far/tests/test_api.py": "6977a60640569ac1",
+        "trace/R0.md": "cf075230b41ebc44",
+        "self-test-verified.txt": "e042aa156146007e"
+      }
+    }
+  }
+}

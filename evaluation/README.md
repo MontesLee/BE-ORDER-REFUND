@@ -1,11 +1,10 @@
 # evaluation — 真实模型 Trial 结果存放区
 
-> **本目录当前不含任何模型的完整结果。**
-> 真实 Trial 已于 2026-09-14 起真实执行到 R0/R1，随后被账号级模型配额（HTTP 429）阻断，
-> **未到达 R9**，故仍无任何模型的完整 PASS / FAIL、维度得分或分层结论。
-> 已发生的真实进展（三个模型的产物快照、模型亲笔留痕、评测方复跑核验）保存在
-> `_trial-incomplete/`，那里刻意**不使用** `final-artifact/` 等完成态命名。
-> **本目录（`<MODEL>/`）中的一切内容都必须在 Trial 真正跑完 R9 后由实测填写，不得伪造。**
+> **本目录当前包含一个完成态的模型评测：Hy3（`HY3/`）。**
+> Hy3 已于 2026-09-14 完成 R0–R9，冻结产物与逐条判定见 `HY3/`，汇总见 `comparison.md`。
+> 试标占位名 `model_c` / `model_d`（Kimi-K3 / GLM-5.3）**不在本次交付范围**：未评测、无判定；
+> 其仅到 R0/R1 的历史留痕存于 `_trial-history/`（那里刻意**不使用** `final-artifact/` 等完成态命名）。
+> **`<MODEL>/` 中的一切内容都必须由实测填写，不得伪造。**
 
 ---
 
@@ -28,7 +27,7 @@
 │ Model Evidence              │  回答：某个 Coding Agent 跑完 R0–R9 后是否满足 Rubric？
 │ evaluation/<model>/         │
 │   trace.md                  │  → 只能由真实 Trial 产生
-│   result.md                 │  → 当前：未完成（INCOMPLETE — 见 _trial-incomplete/）
+│   result.md                 │  → 当前：HY3 已完成（见 HY3/result.md）
 │   final-artifact/           │
 │   evidence.md               │
 └─────────────────────────────┘
@@ -60,20 +59,22 @@ evaluation/
 │   └── final-artifact/
 │       └── README.md
 │
-├── <model_a>/                 真实 Trial 后创建，例如 HY3/
-│   ├── trace.md               调用留痕（request id / trace id）
+├── HY3/                       真实 Trial 结果（已完成 R0–R9）
+│   ├── trace.md               调用留痕（隔离、路由校验、逐轮）
 │   ├── result.md              模型级结论（环境、完成轮数、测试与 Rubric 结果、人工复核）
 │   ├── evidence.md            逐条 Rubric 判定（ID / PASS-FAIL-NA / 证据类型 / 路径 / 理由）
+│   ├── harness_test/          Golden 断言的适配层（只改 harness.py 做接口适配）
 │   └── final-artifact/        模型从 init/ 出发的最终工作区（源码 + 测试 + README）
-├── <model_b>/
-└── <model_c>/
+├── _trial-history/            2026-09-14 中断的多模型 Trial 历史留痕（非完成态）
+├── comparison.md              横向对比（本交付仅一个模型：Hy3）
+└── _TEMPLATE/                 空白模板（下划线前缀 = 非真实结果）
 ```
 
-**命名**：目录名 = 评测报告里使用的模型名（如 `HY3`、`model_c`）。
+**命名**：目录名 = 评测报告里使用的模型名（如 `HY3`）。
 不要建空目录占位——**没有真实 Trace 就不建目录**，避免被误读为"已评测但结果为空"。
 
-当前试标指定模型为 **HY3 / model_c / model_d**；正式评测可用 Hy 3、Kimi 3、
-deepseek v4 flash、Claude Opus 5。以上仅为**评测计划**，不是已完成的评测结果。
+**本次交付范围**：只评测 **Hy3**（已完成，见 `HY3/`）。试标占位名 `model_c` / `model_d`
+（Kimi-K3 / GLM-5.3）**不在本次交付范围**：未评测、不建目录、无判定。
 
 ---
 

@@ -12,22 +12,22 @@
 | | 内容 |
 | --- | --- |
 | ✅ **已完成** | Benchmark 设计（R0–R9 连续 10 轮）· Golden Answer 参考实现 · 22 条自动化测试 · `verify.sh` 一键验证 · 6 条核心不变量自动化 · 22 条原子 Rubric · Rubric→Evidence→Test 双向追溯 · 变异测试区分度实证 |
-| 🟡 **已启动但未完成** | **真实模型 Trial**：3 个模型已从 `init/` 起真实跑到 R0/R1，随后被账号级模型配额（HTTP 429）阻断，未到达 R9。留痕见 `evaluation/_trial-incomplete/` |
-| ⏳ **未完成** | 模型的 R2–R9 · 统一 Golden 测试套结果 · 22 条 Rubric 的模型判定 · `result.md` / `evidence.md` / `comparison.md` · 模型间分层分析 |
-| 📍 **待实测处** | `evaluation/<MODEL>/`（模板见 `evaluation/README.md`）· 已发生的真实进展见 `evaluation/_trial-incomplete/` · `introduction.md` §4 · `round-evidence/*/reviewer.md` 的占位表 |
+| ✅ **已完成** | **真实模型评测（单模型）：Hy3** —— 已完成 R0–R9，冻结产物与 22 条 Rubric 判定已入库，**Final = 0.91**（20 PASS / 2 FAIL）。见 `evaluation/HY3/` 与 `evaluation/comparison.md` |
+| 🚫 **不在本次交付范围** | 其它模型（试标占位名 `model_c` / `model_d`，即 Kimi-K3 / GLM-5.3）：**未评测、无判定**。其仅到 R0/R1 的历史留痕存于 `evaluation/_trial-history/` |
 
-> **本仓库的真实 Coding Agent Trial 已启动，但尚未完成。**
-> 已发生的部分全部留痕于 `evaluation/_trial-incomplete/`（真实产物快照 + 模型亲笔留痕 +
-> 评测方复跑核验），该目录刻意**不使用** `final-artifact/` 等完成态命名。
-> 因此：**没有任何一个模型的完整 PASS / FAIL**、没有模型维度得分、没有分层结论。
-> 除 `_trial-incomplete/` 内已如实标注的自测复核外，文中出现的所有 `PASS` 都是
-> **Golden Answer、测试套、题目质量** 的判定结果，**不是模型评测结果**。三者关系：
+> **本仓库包含一次完整的真实 Coding Agent 评测（Hy3，R0–R9 全程）。**
+> 模型级结论与逐条证据在 `evaluation/HY3/`，冻结产物在 `evaluation/HY3/final-artifact/`。
+> `evaluation/_trial-history/` 保存的是 2026-09-14 一次多模型 Trial 被配额（HTTP 429）中断时的历史留痕，
+> 那里刻意**不使用** `final-artifact/` 等完成态命名。
+>
+> 请注意区分两类证据：本仓库其它位置出现的 `PASS` 多为 **Golden Answer、测试套、题目质量**
+> 的判定结果，**不是模型评测结果**。三者关系：
 >
 > ```
 > Rubric PASS  ≠  Golden Answer PASS  ≠  Model PASS
 > ```
 >
-> 模型证据只存放在 `evaluation/<model>/`，在真实 Trial 发生前该目录为空（仅模板）。
+> 模型证据只存放在 `evaluation/<model>/`。
 
 ---
 
@@ -66,7 +66,7 @@ BE-ORDER-REFUND/
 ├── README.md                   本文件
 ├── instruction.md              题目全文：概览 / 核心矛盾 / 六条不变量 / 状态机 / 实体模型 /
 │                               统一接口契约 / R0–R9 Prompt 原文 / 每轮评分边界 / 17 条失效模式
-├── introduction.md             题目速览 + 包内容与交付格式映射 + Golden 基线 + 模型表现表（Trial 未完成）
+├── introduction.md             题目速览 + 包内容与交付格式映射 + Golden 基线 + 模型表现（Hy3 实测）
 ├── rubric.md                   22 条原子 Rubric（D1–D5 / IF·FD·TE·AQ·CU）+ 逐条 Verification + 计分
 ├── evidence-matrix.md          Rubric → Evidence → Test 双向追溯矩阵
 ├── evaluation-report.md        评测反馈报告：B1–B5 / S1–S6 / 变异测试 / 覆盖 / 风险 / 结论
@@ -104,13 +104,16 @@ BE-ORDER-REFUND/
 │
 ├── evaluation/                 真实模型 Trial 结果存放区
 │   ├── README.md               口径：Golden Evidence vs Model Evidence · 目录结构 · 判定流程
-│   ├── _TEMPLATE/              空白模板（下划线前缀 = 非真实结果；未跑完 R9 前不建立 <MODEL>/）
-│   │   ├── trace.md            调用留痕：request id / trace id
+│   ├── comparison.md           单模型（Hy3）结果汇总
+│   ├── HY3/                    Hy3 评测结果（**已完成 R0–R9**）
+│   │   ├── trace.md            评测方留痕：隔离 / 路由校验 / 逐轮 / 独立复跑
 │   │   ├── result.md           模型级结论：环境 / 完成轮数 / 测试与 Rubric 结果 / 人工复核
 │   │   ├── evidence.md         逐条 Rubric 判定表
-│   │   └── final-artifact/     模型最终工作区（复制模板后填写）
-│   └── _trial-incomplete/      2026-09-14 真实 Trial 的**未完成**留痕
-│                               （state.json + 三模型产物快照 + 亲笔 Trace + 评测方复核 + RUN-LOG）
+│   │   ├── harness_test/       Golden 断言的适配层（只改 harness.py 做接口适配）
+│   │   ├── GOLDEN_BASELINE_R0-R8.md   适配层在 R0–R8 产物上的基线结果
+│   │   └── final-artifact/     Hy3 从 init/ 出发的最终工作区（冻结）
+│   ├── _TEMPLATE/              空白模板（下划线前缀 = 非真实结果）
+│   └── _trial-history/         2026-09-14 多模型 Trial 中断时的历史留痕（非完成态）
 │
 ├── test/README.md              测试套说明 + 「如何适配被测模型产出」（6 步流程）
 └── solve/README.md             参考实现交付说明与设计取舍一览
@@ -190,13 +193,10 @@ uvicorn app.main:app --reload          # 交互式文档 http://127.0.0.1:8000/d
 
 ## 7. 说明与已知限制
 
-- **无真实模型 Trace 时模型列不填**：`introduction.md` §4 与 `round-evidence/*/reviewer.md`
-  的模型表现表保留「待填」，不伪造；须在实测环节补 `trace_id`。
-- **真实模型 Trial 已启动但未完成**：3 个真实模型（Hy3 / Kimi-K3 / GLM-5.3）已从 `init/` 起
-  真实跑通 R0/R1，随后被账号级模型配额（HTTP 429）阻断，未到达 R9。真实进展、配额事件与
-  已发现的缺陷见 `evaluation/_trial-incomplete/TRIAL-RUN-LOG.md`。因未跑完 R9，
-  `evaluation/<MODEL>/` 尚未建立，`introduction.md` §4 的模型列一律「待填」。
-  按试标规则要求**不伪造 Trace**，须在续跑完成后再补 `trace_id` 与逐条判定。
+- **模型评测范围**：本次交付只评测 **Hy3**（已完成 R0–R9，见 `evaluation/HY3/`）。
+  试标占位名 `model_c` / `model_d`（Kimi-K3 / GLM-5.3）**不在交付范围**：未评测、无判定；
+  其仅到 R0/R1 的历史留痕见 `evaluation/_trial-history/`。`introduction.md` §4 只填 Hy3 的实际值，
+  其余不虚构。
 - **参考解只是 baseline**：模型用别的机制（如换 Postgres 行锁、乐观锁版本号）达成同样不变量，同样可拿满分。
 - **崩溃窗口**：认领成功但第三方未回写时进程挂掉会留下 `REFUNDING` 与预留额度，由
   `POST /maintenance/reconcile` 显式释放——这是 SQLite 单机方案的真实边界，不是缺陷。

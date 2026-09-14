@@ -11,7 +11,8 @@
 **PASS WITH FOLLOW-UP**
 
 题目、参考解、测试体系、Rubric、证据链已达交付标准，可**直接进入真实 Tlabel Model Trial 阶段**。
-唯一未完成的环节是**真实模型 Trial 本身**——Trial 已真实启动（3 个模型跑到 R0/R1）但因账号级模型配额（HTTP 429）中断，这是执行环境限制，不是设计缺陷。
+本次交付已完成一次真实 Model Trial（**单模型：Hy3，R0–R9**，Final = 0.91），判定见 `evaluation/HY3/`。
+试标占位名 `model_c` / `model_d`（Kimi-K3 / GLM-5.3）**不在本次交付范围**，未评测、无判定。
 
 ---
 
@@ -104,7 +105,7 @@ R0 项目启动 → R1 细节补充(部分退款) → R2 需求改变(幂等) �
 | golden_answer | **PASS** | clean environment 可运行，`verify.sh` 退出码 0 |
 | rubric | **PASS** | 22 条原子细则，字段符合 Tlabel（含 `round` 单一轮次） |
 | evidence | **PASS** | 双向追溯 + 不变量链路 + 覆盖自检 |
-| model evaluation | **INCOMPLETE** | 真实 Trial 已启动并跑到 R0/R1，被模型配额 429 阻断；留痕见 `evaluation/_trial-incomplete/`；未伪造 |
+| model evaluation | **PASS（单模型）** | 已完成 Hy3 的 R0–R9 真实 Trial，Final = 0.91（20 PASS / 2 FAIL），判定见 `evaluation/HY3/`；`model_c` / `model_d` 不在本次交付范围（未评测）；未伪造 |
 
 ---
 
@@ -127,12 +128,13 @@ R0 项目启动 → R1 细节补充(部分退款) → R2 需求改变(幂等) �
 
 ## 8. Next Required Step
 
-**最大的剩余问题不是 Benchmark 设计，而是真实 Coding Agent Trial 尚未跑完**——它已启动并在 R0/R1 后被模型配额 429 中断，见 `evaluation/_trial-incomplete/TRIAL-RUN-LOG.md`。
+**本次交付的真实 Coding Agent Trial 已跑完**（单模型 Hy3，R0–R9；Final = 0.91，见 `evaluation/HY3/`）。
+若后续要把同一道题扩展到更多模型，按下面 10 步执行（流程本身不变）：
 
 ```
 1.  CodeBuddy 创建独立 workspace
 2.  从 init/ 开始
-3.  使用 evaluator 指定模型（HY3 / model_c / model_d）
+3.  使用 evaluator 指定模型
 4.  严格按 R0 → R9 发送 Prompt 原文
 5.  保存最终 artifact → evaluation/<model>/final-artifact/
 6.  保存 request ID / trace ID → evaluation/<model>/trace.md
@@ -169,6 +171,6 @@ R0 项目启动 → R1 细节补充(部分退款) → R2 需求改变(幂等) �
 
 ## 10. 未做（按约束明确不做）
 
-未伪造 HY3 / model_c / model_d 结果与 `trace_id`；未削弱 Golden Answer 以制造差异；
+未伪造 HY3 / model_c / model_d 结果与 `trace_id`（Hy3 为实测，`model_c` / `model_d` 未评测、未编造）；未削弱 Golden Answer 以制造差异；
 未增加 Redis / Kafka / K8s / 微服务 / ORM；未大规模重构；未改动客户端业务语义；
 未把模型评价写入 Golden baseline；未删除失效模式；未删除或合并 R0–R9。

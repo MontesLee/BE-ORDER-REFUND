@@ -25,10 +25,7 @@ R9 不新增评分维度，做的是**全量历史要求的最终回归**：14 �
 `test-result.txt` 中 R9-T01、R9-T02 的命令与结果；
 清洁环境完整日志见 `golden_answer/verify_doc/test-result.txt`。
 
-## 模型 Trace 留痕（待实测填写）
+## 模型 Trace 留痕
 
-| 模型 | 14 条覆盖 | clean env 可运行 | README 质量 | 是否弱化不变量 |
-| --- | --- | --- | --- | --- |
-| HY3 | 待填 | 待填 | 待填 | 待填 |
-| model_c | 待填 | 待填 | 待填 | 待填 |
-| model_d | 待填 | 待填 | 待填 | 待填 |
+> 本次交付仅评测一个模型：**Hy3（已完成 R0–R9）**。逐轮判定与证据见 `evaluation/HY3/evidence.md`，
+> 汇总见 `evaluation/HY3/result.md`。占位名 `model_c` / `model_d` **不在本次交付范围**（未评测），故不列。

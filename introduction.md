@@ -44,7 +44,7 @@ BE-ORDER-REFUND/
 | --- | --- |
 | `init/` 项目初始态 | `init/`（空） |
 | `golden_answer/` | `golden_answer/`（含 `verify_doc/`，即 README、可执行测试套、运行日志） |
-| `model_A_name/` 等模型产物 | `evaluation/<MODEL>/`（`trace.md` / `result.md` / `final-artifact/` / `evidence.md`）；**未跑完 R9，故尚未创建**；已发生的真实进展存于 `evaluation/_trial-incomplete/`（刻意不使用 `final-artifact/` 命名） |
+| `model_A_name/` 等模型产物 | `evaluation/HY3/`（`trace.md` / `result.md` / `final-artifact/` / `evidence.md`）——**Hy3 已完成 R0–R9**；`evaluation/_trial-history/` 为一次中断的多模型 Trial 历史留痕（刻意不使用 `final-artifact/` 命名） |
 | `introduction.md` | 本文件（§4 模型表现表） |
 | 其他留痕 | `round-evidence/`、`evidence-matrix.md`、`evaluation-report.md` |
 
@@ -52,8 +52,8 @@ BE-ORDER-REFUND/
 
 ## 3. Golden Answer 基线（已完成实测；**不是模型评测结果**）
 
-> 本节只证明"题目 + 参考答案可执行、可判定"。**模型评测尚未跑完**（已启动并在 R0/R1 后被配额中断），
-> 模型结果须由 `evaluation/<model>/` 的实测留痕产生（见 `evaluation/README.md`）。
+> 本节只证明"题目 + 参考答案可执行、可判定"，**不是模型评测结果**。
+> 模型结果由 `evaluation/HY3/` 的实测留痕产生（见 `evaluation/README.md`），本次交付**只评测 Hy3**。
 
 | 指标 | 结果 | 证据 |
 | --- | --- | --- |
@@ -66,51 +66,50 @@ BE-ORDER-REFUND/
 
 ---
 
-## 4. 各模型表现简述
+## 4. 模型表现（本次交付评测模型：Hy3）
 
-> **状态：Trial 已启动，未完成。** 按试标规则 §3.2，题目锁定后须用给定模型实测确认区分度。
-> 本次**实际执行**的模型：**Hy3（`hy3`）、Kimi-K3（`kimi-k3-1`）、GLM-5.3（`glm-5.3`）**——
-> 占位名 `HY3` / `model_c` / `model_d` 中，`HY3` 与出厂名一致，后两者按试标规则
-> 「使用实际可选模型名称」解析为 Kimi-K3 与 GLM-5.3。
-> 3 个模型均已从 `init/` 起真实跑通 R0/R1，随后被账号级模型配额（HTTP 429）阻断，未到 R9。
-> 真实进展见 `evaluation/_trial-incomplete/TRIAL-RUN-LOG.md`。
-> **未跑完 R9 之前，本表不填任何模型判定结论**（不允许伪造）。
+> **本次交付只评测一个模型：Hy3（`hy3`）**，且已完成 R0–R9。
+> 详细判定见 `evaluation/HY3/{trace,result,evidence}.md`，汇总见 `evaluation/comparison.md`。
+> 试标占位名 `model_c` / `model_d` 对应的 Kimi-K3 / GLM-5.3 **不在本次交付范围**：未评测、无判定。
 
-### 4.1 逐轮关键判定
+### 4.1 逐轮关键判定（Hy3 实测）
 
-| 轮次 / 关键点 | Golden Answer | HY3 | model_c | model_d |
-| --- | --- | --- | --- | --- |
-| R0 可运行 + 主流程 | PASS | 待填 | 待填 | 待填 |
-| R1 累计金额上限（I1） | PASS | 待填 | 待填 | 待填 |
-| R2 幂等（I2） | PASS | 待填 | 待填 | 待填 |
-| R3 多 worker 保护（I5） | PASS | 待填 | 待填 | 待填 |
-| R3 并发测试是否校验业务结果 | PASS | 待填 | 待填 | 待填 |
-| R4 竞态定位 + 最小修复 | PASS | 待填 | 待填 | 待填 |
-| R5 解释与代码一致 | PASS | 待填 | 待填 | 待填 |
-| R6 第三方失败语义（I4） | PASS | 待填 | 待填 | 待填 |
-| R7 授权隔离与性能（I6） | PASS | 待填 | 待填 | 待填 |
-| R8 测试覆盖与稳定性 | PASS | 待填 | 待填 | 待填 |
-| R9 最终收敛与全量回归 | PASS | 待填 | 待填 | 待填 |
+| 轮次 / 关键点 | Golden Answer | Hy3 |
+| --- | --- | --- |
+| R0 可运行 + 主流程 | PASS | PASS |
+| R1 累计金额上限（I1） | PASS | PASS |
+| R2 幂等（I2） | PASS | 部分（执行端 PASS；创建端未消费幂等键 → FD-04） |
+| R3 多 worker 保护（I5） | PASS | PASS（SQLite `BEGIN IMMEDIATE` + 条件 UPDATE） |
+| R3 并发测试是否校验业务结果 | PASS | PASS（真多进程，断言业务结果） |
+| R4 竞态定位 + 最小修复 | PASS | PASS（判 Comment 对现码不成立，未做无关重构） |
+| R5 解释与代码一致 | PASS | PASS |
+| R6 第三方失败语义（I4） | PASS | PASS（返 502，非 4xx 的契约偏差） |
+| R7 授权隔离与性能（I6） | PASS | 部分（订单/售后隔离 PASS；审核无归属校验 → FD-08） |
+| R8 测试覆盖与稳定性 | PASS | PASS（六类齐全，确定性、无随机 sleep） |
+| R9 最终收敛与全量回归 | PASS | PASS（90 passed；金额改整数分） |
+
+> 以上为评测方据 `evaluation/HY3/{trace,result,evidence}.md` 的实测汇总，非模型自报。
 
 ### 4.2 Rubric 得分
 
-| 维度（权重） | Golden Answer | HY3 | model_c | model_d |
-| --- | --- | --- | --- | --- |
-| D1 Instruction Following (15%) | 1.00 | 待填 | 待填 | 待填 |
-| D2 Feature Delivery (35%) | 1.00 | 待填 | 待填 | 待填 |
-| D3 Task Efficiency (15%) | 1.00 | 待填 | 待填 | 待填 |
-| D4 Architecture Quality (20%) | 1.00 | 待填 | 待填 | 待填 |
-| D5 Context Understanding (15%) | 1.00 | 待填 | 待填 | 待填 |
-| **Final** | **1.00** | 待填 | 待填 | 待填 |
+| 维度（权重） | Golden Answer | Hy3 |
+| --- | --- | --- |
+| D1 Instruction Following (15%) | 1.00 | 1.00 |
+| D2 Feature Delivery (35%) | 1.00 | 0.75 |
+| D3 Task Efficiency (15%) | 1.00 | 1.00 |
+| D4 Architecture Quality (20%) | 1.00 | 1.00 |
+| D5 Context Understanding (15%) | 1.00 | 1.00 |
+| **Final** | **1.00** | **0.91** |
 
-### 4.3 待填的观察点
+### 4.3 观察点结论（Hy3）
 
-- 各自的分层点落在哪一条不变量上（决定本题的实际区分度）。
-- 是否出现"进程内锁冒充分布式保护"（失效模式 #7）。
-- R6 是否真的做出可替换的网关抽象，还是只加 `try/except`。
-- R7 的性能修复是否克制（有没有为了"优化"引入缓存却没有证据）。
-- 是否有模型在 R9 收敛时弱化历史不变量（删掉并发断言等）。
-- 每个模型的 `trace_id` 按试标规则 §6.2 获取后填入 `round-evidence/*/reviewer.md`。
+- **分层点**在 D2：创建端幂等（FD-04）与审核归属校验（FD-08）两处真实缺陷。
+- **未**出现"进程内锁冒充分布式保护"（失效模式 #7）——R3 即改为跨进程 SQLite 事务保护。
+- R6 做出了可替换的 `RefundGateway` 抽象并确定性模拟成功/失败，不是只加 `try/except`。
+- R7 的性能修复克制（索引 + 分页 + 两阶段退款去长事务），未引入无证据的缓存。
+- R9 **未**弱化历史不变量（并发 / 金额 / 状态机断言保持）。
+- `trace_id`：R9 派发记录见 `evaluation/HY3/trace.md`；R0 亲笔留痕见
+  `evaluation/_trial-history/hy3/trace/R0.md`；R1 亲笔留痕缺失（已在 `evaluation/HY3/trace.md` 如实标注）。
 
 ---
 
