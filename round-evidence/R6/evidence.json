@@ -1,0 +1,111 @@
+{
+  "round": "R6",
+  "tests": [
+    {
+      "id": "R6-T01",
+      "name": "third-party failure must not be recorded as success",
+      "command": "pytest tests/test_failure_retry.py::test_third_party_failure_is_not_marked_success",
+      "expected": "after-sale ends in REFUND_FAILED, no successful refund, counter 0",
+      "result": "PASS"
+    },
+    {
+      "id": "R6-T02",
+      "name": "REFUND_FAILED can be retried",
+      "command": "pytest tests/test_failure_retry.py::test_failed_refund_can_be_retried",
+      "expected": "retry after a failure reaches REFUNDED exactly once",
+      "result": "PASS"
+    },
+    {
+      "id": "R6-T03",
+      "name": "incident regression",
+      "command": "pytest tests/test_failure_retry.py::test_incident_regression_provider_failure",
+      "expected": "reproduces 'provider failed but local shows success' deterministically",
+      "result": "PASS"
+    },
+    {
+      "id": "R6-T04",
+      "name": "a failed attempt does not consume quota",
+      "command": "pytest tests/test_failure_retry.py::test_failed_refund_does_not_consume_quota",
+      "expected": "after a refused 6000 attempt the full 10000 is still available",
+      "result": "PASS"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "R6-E01",
+      "type": "TEST",
+      "source": "R6-T01",
+      "supports": [
+        "FD-07",
+        "AQ-04"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R6-E02",
+      "type": "TEST",
+      "source": "R6-T02",
+      "supports": [
+        "FD-07",
+        "CU-01",
+        "CU-02"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R6-E03",
+      "type": "TEST",
+      "source": "R6-T03",
+      "supports": [
+        "FD-06",
+        "CU-02",
+        "AQ-03"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R6-E04",
+      "type": "TEST",
+      "source": "R6-T04",
+      "supports": [
+        "TE-02"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R6-E05",
+      "type": "CODE",
+      "source": "app/refund_gateway.py",
+      "supports": [
+        "AQ-04"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "rubrics": [
+    {
+      "id": "FD-07",
+      "result": "PASS",
+      "evidence": [
+        "R6-E01",
+        "R6-E02"
+      ]
+    },
+    {
+      "id": "AQ-04",
+      "result": "PASS",
+      "evidence": [
+        "R6-E01",
+        "R6-E05"
+      ]
+    },
+    {
+      "id": "CU-02",
+      "result": "PASS",
+      "evidence": [
+        "R6-E02",
+        "R6-E03"
+      ]
+    }
+  ]
+}

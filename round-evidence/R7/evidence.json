@@ -1,0 +1,99 @@
+{
+  "round": "R7",
+  "tests": [
+    {
+      "id": "R7-T01",
+      "name": "unauthorized order access",
+      "command": "pytest tests/test_security.py::test_unauthorized_order_access",
+      "expected": "cross-tenant read denied and no after-sale created against a foreign order",
+      "result": "PASS"
+    },
+    {
+      "id": "R7-T02",
+      "name": "unauthorized after-sale access",
+      "command": "pytest tests/test_security.py::test_unauthorized_after_sale_access",
+      "expected": "cross-tenant read/approve/execute denied, state unchanged",
+      "result": "PASS"
+    },
+    {
+      "id": "R7-T03",
+      "name": "normal user cannot execute a refund",
+      "command": "pytest tests/test_security.py::test_normal_user_cannot_execute_refund",
+      "expected": "an unapproved request and a foreign request never move money",
+      "result": "PASS"
+    },
+    {
+      "id": "R7-T04",
+      "name": "indexed queries and bounded loading",
+      "command": "pytest tests/test_performance.py::test_indexed_queries_and_bounded_loading",
+      "expected": "no table scans on the hot lookups, limit=5 returns 5 of 300, paged read under 500ms",
+      "result": "PASS"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "R7-E01",
+      "type": "TEST",
+      "source": "R7-T01",
+      "supports": [
+        "FD-08"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R7-E02",
+      "type": "TEST",
+      "source": "R7-T02",
+      "supports": [
+        "FD-08"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R7-E03",
+      "type": "TEST",
+      "source": "R7-T03",
+      "supports": [
+        "FD-08"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R7-E04",
+      "type": "TEST",
+      "source": "R7-T04",
+      "supports": [
+        "AQ-02"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R7-E05",
+      "type": "CODE",
+      "source": "app/auth.py",
+      "supports": [
+        "FD-08"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "rubrics": [
+    {
+      "id": "FD-08",
+      "result": "PASS",
+      "evidence": [
+        "R7-E01",
+        "R7-E02",
+        "R7-E03",
+        "R7-E05"
+      ]
+    },
+    {
+      "id": "AQ-02",
+      "result": "PASS",
+      "evidence": [
+        "R7-E04"
+      ]
+    }
+  ]
+}

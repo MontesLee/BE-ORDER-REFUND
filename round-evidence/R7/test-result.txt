@@ -1,0 +1,59 @@
+$ pytest tests/test_security.py::test_unauthorized_order_access
+# R7-T01 unauthorized order access
+# expected: cross-tenant read denied and no after-sale created against a foreign order
+----------------------------------------------------------------------
+.                                                                        [100%]
+============================== warnings summary ===============================
+tests/test_security.py::test_unauthorized_order_access
+  C:\Users\aubor\.workbuddy\binaries\python\envs\default\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 1 warning in 0.50s
+----------------------------------------------------------------------
+# exit code: 0
+
+$ pytest tests/test_security.py::test_unauthorized_after_sale_access
+# R7-T02 unauthorized after-sale access
+# expected: cross-tenant read/approve/execute denied, state unchanged
+----------------------------------------------------------------------
+.                                                                        [100%]
+============================== warnings summary ===============================
+tests/test_security.py::test_unauthorized_after_sale_access
+  C:\Users\aubor\.workbuddy\binaries\python\envs\default\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 1 warning in 0.48s
+----------------------------------------------------------------------
+# exit code: 0
+
+$ pytest tests/test_security.py::test_normal_user_cannot_execute_refund
+# R7-T03 normal user cannot execute a refund
+# expected: an unapproved request and a foreign request never move money
+----------------------------------------------------------------------
+.                                                                        [100%]
+============================== warnings summary ===============================
+tests/test_security.py::test_normal_user_cannot_execute_refund
+  C:\Users\aubor\.workbuddy\binaries\python\envs\default\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 1 warning in 0.51s
+----------------------------------------------------------------------
+# exit code: 0
+
+$ pytest tests/test_performance.py::test_indexed_queries_and_bounded_loading
+# R7-T04 indexed queries and bounded loading
+# expected: no table scans on the hot lookups, limit=5 returns 5 of 300, paged read under 500ms
+----------------------------------------------------------------------
+.                                                                        [100%]
+============================== warnings summary ===============================
+tests/test_performance.py::test_indexed_queries_and_bounded_loading
+  C:\Users\aubor\.workbuddy\binaries\python\envs\default\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 1 warning in 0.53s
+----------------------------------------------------------------------
+# exit code: 0

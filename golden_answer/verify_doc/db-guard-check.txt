@@ -1,0 +1,22 @@
+== database: C:\Users\aubor\AppData\Local\Temp\refund-guards-_3spy45p\guards.db
+
+[PASS] I2  a second successful refund for one after-sale is rejected
+         expected : IntegrityError
+         observed : IntegrityError: UNIQUE constraint failed: refunds.after_sale_id
+[PASS] I1  orders.refunded_amount > paid_amount is rejected
+         expected : IntegrityError
+         observed : IntegrityError: CHECK constraint failed: refunded_amount <= paid_amount
+[PASS] I1  negative refunded_amount is rejected
+         expected : IntegrityError
+         observed : IntegrityError: CHECK constraint failed: refunded_amount >= 0
+[PASS] R1  after_sales.refund_amount > 0 is enforced by the schema
+         expected : IntegrityError
+         observed : IntegrityError: CHECK constraint failed: refund_amount > 0
+[PASS] I5  a second BEGIN IMMEDIATE writer is refused while one holds the lock
+         expected : OperationalError
+         observed : OperationalError: database is locked
+[PASS] I5  the write lock is released after the holder commits
+         expected : NO_ERROR_RAISED
+         observed : NO_ERROR_RAISED
+
+== all 6 storage-level guards hold

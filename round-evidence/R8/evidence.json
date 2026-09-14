@@ -1,0 +1,57 @@
+{
+  "round": "R8",
+  "tests": [
+    {
+      "id": "R8-T01",
+      "name": "full golden suite",
+      "command": "pytest tests -rA",
+      "expected": "22 passed, 0 failed",
+      "result": "PASS"
+    },
+    {
+      "id": "R8-T02",
+      "name": "coverage of the R8 category list",
+      "command": "python verify_doc/check_coverage_matrix.py",
+      "expected": "18/18 golden tests present and all 6 R8 categories covered",
+      "result": "PASS"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "R8-E01",
+      "type": "TEST",
+      "source": "R8-T01",
+      "supports": [
+        "IF-03",
+        "TE-02"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R8-E02",
+      "type": "TEST",
+      "source": "R8-T02",
+      "supports": [
+        "TE-02"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "rubrics": [
+    {
+      "id": "IF-03",
+      "result": "PASS",
+      "evidence": [
+        "R8-E01"
+      ]
+    },
+    {
+      "id": "TE-02",
+      "result": "PASS",
+      "evidence": [
+        "R8-E01",
+        "R8-E02"
+      ]
+    }
+  ]
+}

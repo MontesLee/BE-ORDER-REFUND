@@ -1,0 +1,129 @@
+[
+  {
+    "id": "M0",
+    "description": "unmodified golden answer (control)",
+    "expected": "all tests pass",
+    "tests": [
+      "tests"
+    ],
+    "returncode": 0,
+    "summary": [
+      ""
+    ],
+    "failed_tests": [],
+    "killed": true,
+    "matched_expectation": true
+  },
+  {
+    "id": "M1",
+    "description": "check-then-write race: deferred transaction, no DB-level invariant guard",
+    "expected": "at least one test fails",
+    "tests": [
+      "tests/test_concurrency.py",
+      "tests/test_amount.py"
+    ],
+    "returncode": 1,
+    "summary": [
+      ""
+    ],
+    "failed_tests": [
+      "tests/test_amount.py::test_over_refund_is_rejected",
+      "tests/test_amount.py::test_single_refund_larger_than_paid_amount_is_rejected",
+      "tests/test_concurrency.py::test_concurrent_multiple_after_sales"
+    ],
+    "killed": true,
+    "matched_expectation": true
+  },
+  {
+    "id": "M2",
+    "description": "third-party failure ignored: local record always settled as successful",
+    "expected": "at least one test fails",
+    "tests": [
+      "tests/test_failure_retry.py"
+    ],
+    "returncode": 1,
+    "summary": [
+      "Reported symptom: \"the provider failed but the order shows the refund"
+    ],
+    "failed_tests": [
+      "tests/test_failure_retry.py::test_failed_refund_can_be_retried",
+      "tests/test_failure_retry.py::test_failed_refund_does_not_consume_quota",
+      "tests/test_failure_retry.py::test_incident_regression_provider_failure",
+      "tests/test_failure_retry.py::test_third_party_failure_is_not_marked_success"
+    ],
+    "killed": true,
+    "matched_expectation": true
+  },
+  {
+    "id": "M3",
+    "description": "idempotency ignored: duplicate submissions create new rows",
+    "expected": "at least one test fails",
+    "tests": [
+      "tests/test_idempotency.py"
+    ],
+    "returncode": 1,
+    "summary": [
+      ""
+    ],
+    "failed_tests": [
+      "tests/test_idempotency.py::test_duplicate_submit_creates_one_after_sale"
+    ],
+    "killed": true,
+    "matched_expectation": true
+  },
+  {
+    "id": "M4",
+    "description": "ownership not verified: existence check only, no tenant isolation",
+    "expected": "at least one test fails",
+    "tests": [
+      "tests/test_security.py"
+    ],
+    "returncode": 1,
+    "summary": [
+      ""
+    ],
+    "failed_tests": [
+      "tests/test_security.py::test_unauthorized_after_sale_access",
+      "tests/test_security.py::test_unauthorized_order_access"
+    ],
+    "killed": true,
+    "matched_expectation": true
+  },
+  {
+    "id": "M5",
+    "description": "illegal transition allowed: PENDING may jump straight to a refund attempt",
+    "expected": "at least one test fails",
+    "tests": [
+      "tests/test_state_machine.py"
+    ],
+    "returncode": 1,
+    "summary": [
+      ""
+    ],
+    "failed_tests": [
+      "tests/test_state_machine.py::test_illegal_state_transitions_rejected"
+    ],
+    "killed": true,
+    "matched_expectation": true
+  },
+  {
+    "id": "M6",
+    "description": "failed attempt keeps its reservation: quota silently burned by a failure",
+    "expected": "at least one test fails",
+    "tests": [
+      "tests/test_failure_retry.py"
+    ],
+    "returncode": 1,
+    "summary": [
+      "Reported symptom: \"the provider failed but the order shows the refund"
+    ],
+    "failed_tests": [
+      "tests/test_failure_retry.py::test_failed_refund_can_be_retried",
+      "tests/test_failure_retry.py::test_failed_refund_does_not_consume_quota",
+      "tests/test_failure_retry.py::test_incident_regression_provider_failure",
+      "tests/test_failure_retry.py::test_third_party_failure_is_not_marked_success"
+    ],
+    "killed": true,
+    "matched_expectation": true
+  }
+]

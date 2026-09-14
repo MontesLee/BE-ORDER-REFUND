@@ -1,0 +1,132 @@
+{
+  "round": "R3",
+  "tests": [
+    {
+      "id": "R3-T01",
+      "name": "concurrent execution of the same after-sale",
+      "command": "pytest tests/test_concurrency.py::test_concurrent_same_after_sale",
+      "expected": "across 2 worker processes x 8 attackers x 3 rounds: exactly one successful refund per after-sale",
+      "result": "PASS"
+    },
+    {
+      "id": "R3-T02",
+      "name": "concurrent execution of several after-sales on one order",
+      "command": "pytest tests/test_concurrency.py::test_concurrent_multiple_after_sales",
+      "expected": "refunded_amount <= paid_amount and ledger == refunded_amount",
+      "result": "PASS"
+    },
+    {
+      "id": "R3-T03",
+      "name": "the cluster really is multi-process",
+      "command": "pytest tests/test_concurrency.py::test_cluster_really_is_multi_process",
+      "expected": "two distinct uvicorn worker PIDs, two distinct ports, both serving the refund app",
+      "result": "PASS"
+    },
+    {
+      "id": "R3-T04",
+      "name": "storage-level invariant guards",
+      "command": "python verify_doc/check_db_guards.py",
+      "expected": "6/6 guards hold: second REFUNDED rejected, over-cap rejected, BEGIN IMMEDIATE lock exclusive",
+      "result": "PASS"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "R3-E01",
+      "type": "TEST",
+      "source": "R3-T01",
+      "supports": [
+        "FD-05",
+        "AQ-01"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R3-E02",
+      "type": "TEST",
+      "source": "R3-T02",
+      "supports": [
+        "FD-03",
+        "CU-01"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R3-E03",
+      "type": "TEST",
+      "source": "R3-T03",
+      "supports": [
+        "AQ-01"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R3-E04",
+      "type": "TEST",
+      "source": "R3-T04",
+      "supports": [
+        "AQ-01",
+        "AQ-02"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R3-E05",
+      "type": "CODE",
+      "source": "app/repository.py",
+      "supports": [
+        "TE-03",
+        "AQ-05",
+        "AQ-02"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "rubrics": [
+    {
+      "id": "AQ-01",
+      "result": "PASS",
+      "evidence": [
+        "R3-E01",
+        "R3-E03",
+        "R3-E04"
+      ]
+    },
+    {
+      "id": "AQ-02",
+      "result": "PASS",
+      "evidence": [
+        "R3-E04",
+        "R3-E05"
+      ]
+    },
+    {
+      "id": "FD-03",
+      "result": "PASS",
+      "evidence": [
+        "R3-E02"
+      ]
+    },
+    {
+      "id": "CU-01",
+      "result": "PASS",
+      "evidence": [
+        "R3-E02"
+      ]
+    },
+    {
+      "id": "TE-03",
+      "result": "PASS",
+      "evidence": [
+        "R3-E05"
+      ]
+    },
+    {
+      "id": "AQ-05",
+      "result": "PASS",
+      "evidence": [
+        "R3-E05"
+      ]
+    }
+  ]
+}

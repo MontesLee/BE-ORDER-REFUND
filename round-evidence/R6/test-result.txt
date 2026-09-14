@@ -1,0 +1,59 @@
+$ pytest tests/test_failure_retry.py::test_third_party_failure_is_not_marked_success
+# R6-T01 third-party failure must not be recorded as success
+# expected: after-sale ends in REFUND_FAILED, no successful refund, counter 0
+----------------------------------------------------------------------
+.                                                                        [100%]
+============================== warnings summary ===============================
+tests/test_failure_retry.py::test_third_party_failure_is_not_marked_success
+  C:\Users\aubor\.workbuddy\binaries\python\envs\default\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 1 warning in 0.48s
+----------------------------------------------------------------------
+# exit code: 0
+
+$ pytest tests/test_failure_retry.py::test_failed_refund_can_be_retried
+# R6-T02 REFUND_FAILED can be retried
+# expected: retry after a failure reaches REFUNDED exactly once
+----------------------------------------------------------------------
+.                                                                        [100%]
+============================== warnings summary ===============================
+tests/test_failure_retry.py::test_failed_refund_can_be_retried
+  C:\Users\aubor\.workbuddy\binaries\python\envs\default\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 1 warning in 0.55s
+----------------------------------------------------------------------
+# exit code: 0
+
+$ pytest tests/test_failure_retry.py::test_incident_regression_provider_failure
+# R6-T03 incident regression
+# expected: reproduces 'provider failed but local shows success' deterministically
+----------------------------------------------------------------------
+.                                                                        [100%]
+============================== warnings summary ===============================
+tests/test_failure_retry.py::test_incident_regression_provider_failure
+  C:\Users\aubor\.workbuddy\binaries\python\envs\default\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 1 warning in 0.55s
+----------------------------------------------------------------------
+# exit code: 0
+
+$ pytest tests/test_failure_retry.py::test_failed_refund_does_not_consume_quota
+# R6-T04 a failed attempt does not consume quota
+# expected: after a refused 6000 attempt the full 10000 is still available
+----------------------------------------------------------------------
+.                                                                        [100%]
+============================== warnings summary ===============================
+tests/test_failure_retry.py::test_failed_refund_does_not_consume_quota
+  C:\Users\aubor\.workbuddy\binaries\python\envs\default\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 1 warning in 0.64s
+----------------------------------------------------------------------
+# exit code: 0

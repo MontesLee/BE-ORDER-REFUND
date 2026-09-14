@@ -1,0 +1,82 @@
+{
+  "round": "R5",
+  "tests": [
+    {
+      "id": "R5-T01",
+      "name": "code inspection for the explanation round",
+      "command": "python verify_doc/inspect_for_explanation.py",
+      "expected": "printed transitions, guards and isolation level match app/ exactly (this round has no automated business assertion)",
+      "result": "PASS"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "R5-E01",
+      "type": "CODE",
+      "source": "app/state_machine.py",
+      "supports": [
+        "CU-03",
+        "AQ-03"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R5-E02",
+      "type": "CODE",
+      "source": "app/service.py",
+      "supports": [
+        "CU-03",
+        "AQ-03"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R5-E03",
+      "type": "CODE",
+      "source": "app/repository.py",
+      "supports": [
+        "CU-03",
+        "AQ-01",
+        "AQ-02"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R5-E04",
+      "type": "DOC",
+      "source": "golden_answer/README.md",
+      "supports": [
+        "CU-03",
+        "AQ-05"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "rubrics": [
+    {
+      "id": "CU-03",
+      "result": "PASS",
+      "evidence": [
+        "R5-E01",
+        "R5-E02",
+        "R5-E03",
+        "R5-E04"
+      ]
+    },
+    {
+      "id": "AQ-03",
+      "result": "PASS",
+      "evidence": [
+        "R5-E01",
+        "R5-E02"
+      ]
+    },
+    {
+      "id": "AQ-05",
+      "result": "PASS",
+      "evidence": [
+        "R5-E04"
+      ]
+    }
+  ]
+}

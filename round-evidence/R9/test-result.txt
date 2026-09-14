@@ -1,0 +1,152 @@
+$ pytest tests -rA
+# R9-T01 final full-suite regression
+# expected: 22 passed: every historical requirement still holds
+----------------------------------------------------------------------
+......................                                                   [100%]
+============================== warnings summary ===============================
+tests/test_amount.py::test_multiple_partial_refunds
+  C:\Users\aubor\.workbuddy\binaries\python\envs\default\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=================================== PASSES ====================================
+=========================== short test summary info ===========================
+PASSED tests/test_amount.py::test_multiple_partial_refunds
+PASSED tests/test_amount.py::test_over_refund_is_rejected
+PASSED tests/test_amount.py::test_single_refund_larger_than_paid_amount_is_rejected
+PASSED tests/test_concurrency.py::test_cluster_really_is_multi_process
+PASSED tests/test_concurrency.py::test_concurrent_same_after_sale
+PASSED tests/test_concurrency.py::test_concurrent_multiple_after_sales
+PASSED tests/test_failure_retry.py::test_third_party_failure_is_not_marked_success
+PASSED tests/test_failure_retry.py::test_failed_refund_does_not_consume_quota
+PASSED tests/test_failure_retry.py::test_failed_refund_can_be_retried
+PASSED tests/test_failure_retry.py::test_incident_regression_provider_failure
+PASSED tests/test_idempotency.py::test_duplicate_submit_creates_one_after_sale
+PASSED tests/test_idempotency.py::test_duplicate_execute_creates_one_refund
+PASSED tests/test_idempotency.py::test_duplicate_submit_does_not_break_the_amount_cap
+PASSED tests/test_order.py::test_project_runs_and_basic_flow
+PASSED tests/test_performance.py::test_indexed_queries_and_bounded_loading
+PASSED tests/test_refund.py::test_normal_full_refund
+PASSED tests/test_refund.py::test_unpaid_order_cannot_be_refunded
+PASSED tests/test_security.py::test_unauthorized_order_access
+PASSED tests/test_security.py::test_unauthorized_after_sale_access
+PASSED tests/test_security.py::test_normal_user_cannot_execute_refund
+PASSED tests/test_state_machine.py::test_illegal_state_transitions_rejected
+PASSED tests/test_state_machine.py::test_refunded_is_terminal
+22 passed, 1 warning in 6.63s
+----------------------------------------------------------------------
+# exit code: 0
+
+$ bash verify.sh
+# R9-T02 clean-environment runnability (verify.sh)
+# expected: exit code 0: full suite plus both probes green; the fresh-virtualenv run is recorded in golden_answer/verify_doc/test-result.txt
+----------------------------------------------------------------------
+== workspace: /c/Users/aubor/WorkBuddy/2026-09-14-10-38-39/BE-ORDER-REFUND/golden_answer
+== interpreter: C:\Users\aubor\.workbuddy\binaries\python\envs\default\Scripts\python.exe
+== version: 3.13.14 (main, Jun 11 2026, 04:04:46) [MSC v.1944 64 bit (AMD64)]
+== reusing interpreter (no venv created)
+== installing requirements
+== installed:
+fastapi                   0.141.1
+httpx                     0.28.1
+pytest                    9.1.1
+uvicorn                   0.52.4
+== database: C:\Users\aubor\AppData\Local\Temp\tmp.UmEGXvSz9P/verify.db
+== running golden test suite
+
+......................                                                   [100%]
+============================== warnings summary ===============================
+tests/test_amount.py::test_multiple_partial_refunds
+  C:\Users\aubor\.workbuddy\binaries\python\envs\default\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=================================== PASSES ====================================
+=========================== short test summary info ===========================
+PASSED tests/test_amount.py::test_multiple_partial_refunds
+PASSED tests/test_amount.py::test_over_refund_is_rejected
+PASSED tests/test_amount.py::test_single_refund_larger_than_paid_amount_is_rejected
+PASSED tests/test_concurrency.py::test_cluster_really_is_multi_process
+PASSED tests/test_concurrency.py::test_concurrent_same_after_sale
+PASSED tests/test_concurrency.py::test_concurrent_multiple_after_sales
+PASSED tests/test_failure_retry.py::test_third_party_failure_is_not_marked_success
+PASSED tests/test_failure_retry.py::test_failed_refund_does_not_consume_quota
+PASSED tests/test_failure_retry.py::test_failed_refund_can_be_retried
+PASSED tests/test_failure_retry.py::test_incident_regression_provider_failure
+PASSED tests/test_idempotency.py::test_duplicate_submit_creates_one_after_sale
+PASSED tests/test_idempotency.py::test_duplicate_execute_creates_one_refund
+PASSED tests/test_idempotency.py::test_duplicate_submit_does_not_break_the_amount_cap
+PASSED tests/test_order.py::test_project_runs_and_basic_flow
+PASSED tests/test_performance.py::test_indexed_queries_and_bounded_loading
+PASSED tests/test_refund.py::test_normal_full_refund
+PASSED tests/test_refund.py::test_unpaid_order_cannot_be_refunded
+PASSED tests/test_security.py::test_unauthorized_order_access
+PASSED tests/test_security.py::test_unauthorized_after_sale_access
+PASSED tests/test_security.py::test_normal_user_cannot_execute_refund
+PASSED tests/test_state_machine.py::test_illegal_state_transitions_rejected
+PASSED tests/test_state_machine.py::test_refunded_is_terminal
+22 passed, 1 warning in 6.85s
+
+================================================================
+storage-level invariant probe (verify_doc/check_db_guards.py)
+================================================================
+== database: C:\Users\aubor\AppData\Local\Temp\refund-guards-8rf9o42a\guards.db
+
+[PASS] I2  a second successful refund for one after-sale is rejected
+         expected : IntegrityError
+         observed : IntegrityError: UNIQUE constraint failed: refunds.after_sale_id
+[PASS] I1  orders.refunded_amount > paid_amount is rejected
+         expected : IntegrityError
+         observed : IntegrityError: CHECK constraint failed: refunded_amount <= paid_amount
+[PASS] I1  negative refunded_amount is rejected
+         expected : IntegrityError
+         observed : IntegrityError: CHECK constraint failed: refunded_amount >= 0
+[PASS] R1  after_sales.refund_amount > 0 is enforced by the schema
+         expected : IntegrityError
+         observed : IntegrityError: CHECK constraint failed: refund_amount > 0
+[PASS] I5  a second BEGIN IMMEDIATE writer is refused while one holds the lock
+         expected : OperationalError
+         observed : OperationalError: database is locked
+[PASS] I5  the write lock is released after the holder commits
+         expected : NO_ERROR_RAISED
+         observed : NO_ERROR_RAISED
+
+== all 6 storage-level guards hold
+
+================================================================
+golden-test coverage probe (verify_doc/check_coverage_matrix.py)
+================================================================
+== collected 22 test nodes from C:\Users\aubor\WorkBuddy\2026-09-14-10-38-39\BE-ORDER-REFUND\golden_answer\tests
+
+[OK  ] T01 normal refund                        tests/test_refund.py::test_normal_full_refund  (business)
+[OK  ] T02 unpaid refund                        tests/test_refund.py::test_unpaid_order_cannot_be_refunded  (business)
+[OK  ] T03 multiple partial refunds             tests/test_amount.py::test_multiple_partial_refunds  (business)
+[OK  ] T04 over-refund                          tests/test_amount.py::test_over_refund_is_rejected  (business)
+[OK  ] T05 failed refund does not consume quota tests/test_failure_retry.py::test_failed_refund_does_not_consume_quota  (third-party)
+[OK  ] T06 duplicate submission                 tests/test_idempotency.py::test_duplicate_submit_creates_one_after_sale  (idempotency)
+[OK  ] T07 duplicate execute                    tests/test_idempotency.py::test_duplicate_execute_creates_one_refund  (idempotency)
+[OK  ] T08 illegal state                        tests/test_state_machine.py::test_illegal_state_transitions_rejected  (state)
+[OK  ] T09 failure retry                        tests/test_failure_retry.py::test_failed_refund_can_be_retried  (third-party)
+[OK  ] T10 success then no retry                tests/test_state_machine.py::test_refunded_is_terminal  (state)
+[OK  ] T11 third-party failure                  tests/test_failure_retry.py::test_third_party_failure_is_not_marked_success  (third-party)
+[OK  ] T12 incident regression                  tests/test_failure_retry.py::test_incident_regression_provider_failure  (third-party)
+[OK  ] T13 concurrent same AfterSale            tests/test_concurrency.py::test_concurrent_same_after_sale  (concurrency)
+[OK  ] T14 concurrent multiple AfterSale        tests/test_concurrency.py::test_concurrent_multiple_after_sales  (concurrency)
+[OK  ] T15 unauthorized order                   tests/test_security.py::test_unauthorized_order_access  (security)
+[OK  ] T16 unauthorized AfterSale               tests/test_security.py::test_unauthorized_after_sale_access  (security)
+[OK  ] T17 protected refund execution           tests/test_security.py::test_normal_user_cannot_execute_refund  (security)
+[OK  ] T18 index + bounded loading              tests/test_performance.py::test_indexed_queries_and_bounded_loading  (performance)
+
+[OK  ] category business     4/4 golden tests present
+[OK  ] category state        2/2 golden tests present
+[OK  ] category idempotency  2/2 golden tests present
+[OK  ] category concurrency  2/2 golden tests present
+[OK  ] category third-party  4/4 golden tests present
+[OK  ] category security     3/3 golden tests present
+
+== coverage OK: 18/18 golden tests, 6/6 categories
+
+== exit code: 0
+== log written to: /c/Users/aubor/WorkBuddy/2026-09-14-10-38-39/BE-ORDER-REFUND/golden_answer/C:\Users\aubor\AppData\Local\Temp\round-R9-2oup6v_q\verify-R9-1.txt
+----------------------------------------------------------------------
+# exit code: 0

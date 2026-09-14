@@ -1,0 +1,82 @@
+{
+  "round": "R0",
+  "tests": [
+    {
+      "id": "R0-T01",
+      "name": "service boots and the full happy path works",
+      "command": "pytest tests/test_order.py::test_project_runs_and_basic_flow",
+      "expected": "service starts, order paid, after-sale approved and refunded",
+      "result": "PASS"
+    },
+    {
+      "id": "R0-T02",
+      "name": "normal full refund",
+      "command": "pytest tests/test_refund.py::test_normal_full_refund",
+      "expected": "paid order reaches REFUNDED with exactly one successful refund",
+      "result": "PASS"
+    },
+    {
+      "id": "R0-T03",
+      "name": "unpaid order cannot be refunded",
+      "command": "pytest tests/test_refund.py::test_unpaid_order_cannot_be_refunded",
+      "expected": "no successful refund and refunded_amount == 0",
+      "result": "PASS"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "R0-E01",
+      "type": "TEST",
+      "source": "R0-T01",
+      "supports": [
+        "IF-01"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R0-E02",
+      "type": "TEST",
+      "source": "R0-T02",
+      "supports": [
+        "FD-01"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R0-E03",
+      "type": "TEST",
+      "source": "R0-T03",
+      "supports": [
+        "FD-01"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R0-E04",
+      "type": "DOC",
+      "source": "golden_answer/README.md#1-quickstart",
+      "supports": [
+        "IF-01"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "rubrics": [
+    {
+      "id": "IF-01",
+      "result": "PASS",
+      "evidence": [
+        "R0-E01",
+        "R0-E04"
+      ]
+    },
+    {
+      "id": "FD-01",
+      "result": "PASS",
+      "evidence": [
+        "R0-E02",
+        "R0-E03"
+      ]
+    }
+  ]
+}

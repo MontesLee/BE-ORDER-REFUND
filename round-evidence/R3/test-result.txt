@@ -1,0 +1,55 @@
+$ pytest tests/test_concurrency.py::test_concurrent_same_after_sale
+# R3-T01 concurrent execution of the same after-sale
+# expected: across 2 worker processes x 8 attackers x 3 rounds: exactly one successful refund per after-sale
+----------------------------------------------------------------------
+.                                                                        [100%]
+1 passed in 2.67s
+----------------------------------------------------------------------
+# exit code: 0
+
+$ pytest tests/test_concurrency.py::test_concurrent_multiple_after_sales
+# R3-T02 concurrent execution of several after-sales on one order
+# expected: refunded_amount <= paid_amount and ledger == refunded_amount
+----------------------------------------------------------------------
+.                                                                        [100%]
+1 passed in 2.28s
+----------------------------------------------------------------------
+# exit code: 0
+
+$ pytest tests/test_concurrency.py::test_cluster_really_is_multi_process
+# R3-T03 the cluster really is multi-process
+# expected: two distinct uvicorn worker PIDs, two distinct ports, both serving the refund app
+----------------------------------------------------------------------
+.                                                                        [100%]
+1 passed in 1.60s
+----------------------------------------------------------------------
+# exit code: 0
+
+$ python verify_doc/check_db_guards.py
+# R3-T04 storage-level invariant guards
+# expected: 6/6 guards hold: second REFUNDED rejected, over-cap rejected, BEGIN IMMEDIATE lock exclusive
+----------------------------------------------------------------------
+== database: C:\Users\aubor\AppData\Local\Temp\refund-guards-rralj3wb\guards.db
+
+[PASS] I2  a second successful refund for one after-sale is rejected
+         expected : IntegrityError
+         observed : IntegrityError: UNIQUE constraint failed: refunds.after_sale_id
+[PASS] I1  orders.refunded_amount > paid_amount is rejected
+         expected : IntegrityError
+         observed : IntegrityError: CHECK constraint failed: refunded_amount <= paid_amount
+[PASS] I1  negative refunded_amount is rejected
+         expected : IntegrityError
+         observed : IntegrityError: CHECK constraint failed: refunded_amount >= 0
+[PASS] R1  after_sales.refund_amount > 0 is enforced by the schema
+         expected : IntegrityError
+         observed : IntegrityError: CHECK constraint failed: refund_amount > 0
+[PASS] I5  a second BEGIN IMMEDIATE writer is refused while one holds the lock
+         expected : OperationalError
+         observed : OperationalError: database is locked
+[PASS] I5  the write lock is released after the holder commits
+         expected : NO_ERROR_RAISED
+         observed : NO_ERROR_RAISED
+
+== all 6 storage-level guards hold
+----------------------------------------------------------------------
+# exit code: 0

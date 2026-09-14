@@ -1,0 +1,8 @@
+# local verification artifacts — not part of the deliverable
+.venv/
+.verify-work/
+.pytest_cache/
+__pycache__/
+*.pyc
+*.db
+*.log

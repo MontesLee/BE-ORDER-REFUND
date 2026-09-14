@@ -1,0 +1,79 @@
+{
+  "round": "R1",
+  "tests": [
+    {
+      "id": "R1-T01",
+      "name": "multiple partial refunds on one order",
+      "command": "pytest tests/test_amount.py::test_multiple_partial_refunds",
+      "expected": "3000+3000+4000 == 10000 and ledger == order counter",
+      "result": "PASS"
+    },
+    {
+      "id": "R1-T02",
+      "name": "over-refund refused",
+      "command": "pytest tests/test_amount.py::test_over_refund_is_rejected",
+      "expected": "second 6000 refund refused, counter stays at 6000",
+      "result": "PASS"
+    },
+    {
+      "id": "R1-T03",
+      "name": "single refund larger than paid amount refused",
+      "command": "pytest tests/test_amount.py::test_single_refund_larger_than_paid_amount_is_rejected",
+      "expected": "9000 against a 5000 order is refused, counter stays 0",
+      "result": "PASS"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "R1-E01",
+      "type": "TEST",
+      "source": "R1-T01",
+      "supports": [
+        "FD-02",
+        "FD-03"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R1-E02",
+      "type": "TEST",
+      "source": "R1-T02",
+      "supports": [
+        "FD-03"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R1-E03",
+      "type": "TEST",
+      "source": "R1-T03",
+      "supports": [
+        "FD-03"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "rubrics": [
+    {
+      "id": "FD-02",
+      "result": "PASS",
+      "evidence": [
+        "R1-E01"
+      ]
+    },
+    {
+      "id": "FD-03",
+      "result": "PASS",
+      "evidence": [
+        "R1-E01",
+        "R1-E02",
+        "R1-E03"
+      ]
+    },
+    {
+      "id": "IF-02",
+      "result": "NOT_APPLICABLE",
+      "evidence": []
+    }
+  ]
+}

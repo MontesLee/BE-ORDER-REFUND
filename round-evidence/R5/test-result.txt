@@ -1,0 +1,40 @@
+$ python verify_doc/inspect_for_explanation.py
+# R5-T01 code inspection for the explanation round
+# expected: printed transitions, guards and isolation level match app/ exactly (this round has no automated business assertion)
+----------------------------------------------------------------------
+== app/state_machine.py: AFTER_SALE_TRANSITIONS ==
+  PENDING        -> ['APPROVED']
+  APPROVED       -> ['REFUNDING']
+  REFUNDING      -> ['REFUNDED', 'REFUND_FAILED']
+  REFUND_FAILED  -> ['REFUNDING']
+  REFUNDED       -> TERMINAL
+
+== app/state_machine.py: REFUND_START_STATES ==
+  ['APPROVED', 'REFUND_FAILED']
+
+== app/service.py: quota guard actually executed in _claim_refund ==
+  if not state_machine.can_start_refund(status):
+  if not repository.reserve_refund_quota(conn, order["id"], amount):
+  refund_id = repository.insert_refund(
+  repository.update_after_sale_status(
+
+== app/repository.py: reserve_refund_quota SQL guard ==
+  above ``paid_amount``.  The ``WHERE`` clause makes check-and-reserve a
+  WHERE id = ?
+  AND payment_status = 'PAID'
+  AND refunded_amount + ? <= paid_amount
+
+== app/repository.py: partial unique index on successful refunds ==
+  CREATE UNIQUE INDEX IF NOT EXISTS ux_after_sales_idempotency
+  CREATE UNIQUE INDEX IF NOT EXISTS ux_refunds_one_success
+
+== app/repository.py: write_tx isolation level ==
+  ``BEGIN IMMEDIATE`` takes the database write lock *before* the first read,
+  ``BEGIN DEFERRED`` would allow exactly the race the benchmark targets.
+  conn.execute("BEGIN IMMEDIATE")
+
+== app/service.py: release_refund_quota on provider failure ==
+  if result.ok:
+  repository.release_refund_quota(conn, order_id, amount)
+----------------------------------------------------------------------
+# exit code: 0

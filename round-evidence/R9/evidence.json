@@ -1,0 +1,75 @@
+{
+  "round": "R9",
+  "tests": [
+    {
+      "id": "R9-T01",
+      "name": "final full-suite regression",
+      "command": "pytest tests -rA",
+      "expected": "22 passed: every historical requirement still holds",
+      "result": "PASS"
+    },
+    {
+      "id": "R9-T02",
+      "name": "clean-environment runnability (verify.sh)",
+      "command": "bash verify.sh",
+      "expected": "exit code 0: full suite plus both probes green; the fresh-virtualenv run is recorded in golden_answer/verify_doc/test-result.txt",
+      "result": "PASS"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "R9-E01",
+      "type": "TEST",
+      "source": "R9-T01",
+      "supports": [
+        "IF-03",
+        "CU-01",
+        "FD-01",
+        "FD-02",
+        "FD-03",
+        "FD-04",
+        "FD-05",
+        "FD-06",
+        "FD-07",
+        "FD-08"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R9-E02",
+      "type": "TEST",
+      "source": "R9-T02",
+      "supports": [
+        "IF-03"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R9-E03",
+      "type": "DOC",
+      "source": "golden_answer/README.md",
+      "supports": [
+        "IF-03"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "rubrics": [
+    {
+      "id": "IF-03",
+      "result": "PASS",
+      "evidence": [
+        "R9-E01",
+        "R9-E02",
+        "R9-E03"
+      ]
+    },
+    {
+      "id": "CU-01",
+      "result": "PASS",
+      "evidence": [
+        "R9-E01"
+      ]
+    }
+  ]
+}

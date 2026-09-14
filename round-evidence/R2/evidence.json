@@ -1,0 +1,122 @@
+{
+  "round": "R2",
+  "tests": [
+    {
+      "id": "R2-T01",
+      "name": "duplicate submission",
+      "command": "pytest tests/test_idempotency.py::test_duplicate_submit_creates_one_after_sale",
+      "expected": "same idempotency key twice -> one after-sale, same id",
+      "result": "PASS"
+    },
+    {
+      "id": "R2-T02",
+      "name": "duplicate execute",
+      "command": "pytest tests/test_idempotency.py::test_duplicate_execute_creates_one_refund",
+      "expected": "executing a REFUNDED after-sale again produces no second refund",
+      "result": "PASS"
+    },
+    {
+      "id": "R2-T03",
+      "name": "idempotency does not break the amount cap",
+      "command": "pytest tests/test_idempotency.py::test_duplicate_submit_does_not_break_the_amount_cap",
+      "expected": "three replays of the same key still yield one 10000 refund",
+      "result": "PASS"
+    },
+    {
+      "id": "R2-T04",
+      "name": "illegal state transitions",
+      "command": "pytest tests/test_state_machine.py::test_illegal_state_transitions_rejected",
+      "expected": "PENDING cannot reach REFUNDED",
+      "result": "PASS"
+    },
+    {
+      "id": "R2-T05",
+      "name": "REFUNDED is terminal",
+      "command": "pytest tests/test_state_machine.py::test_refunded_is_terminal",
+      "expected": "approve/execute after success cannot reopen or refund again",
+      "result": "PASS"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "R2-E01",
+      "type": "TEST",
+      "source": "R2-T01",
+      "supports": [
+        "FD-04"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R2-E02",
+      "type": "TEST",
+      "source": "R2-T03",
+      "supports": [
+        "FD-04"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R2-E03",
+      "type": "TEST",
+      "source": "R2-T02",
+      "supports": [
+        "FD-05"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R2-E04",
+      "type": "TEST",
+      "source": "R2-T04",
+      "supports": [
+        "FD-06"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R2-E05",
+      "type": "TEST",
+      "source": "R2-T05",
+      "supports": [
+        "FD-06"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R2-E06",
+      "type": "CODE",
+      "source": "app/state_machine.py",
+      "supports": [
+        "FD-06"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "rubrics": [
+    {
+      "id": "FD-04",
+      "result": "PASS",
+      "evidence": [
+        "R2-E01",
+        "R2-E02"
+      ]
+    },
+    {
+      "id": "FD-05",
+      "result": "PASS",
+      "evidence": [
+        "R2-E03"
+      ]
+    },
+    {
+      "id": "FD-06",
+      "result": "PASS",
+      "evidence": [
+        "R2-E04",
+        "R2-E05",
+        "R2-E06"
+      ]
+    }
+  ]
+}

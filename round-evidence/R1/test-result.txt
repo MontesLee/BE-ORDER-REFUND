@@ -1,0 +1,44 @@
+$ pytest tests/test_amount.py::test_multiple_partial_refunds
+# R1-T01 multiple partial refunds on one order
+# expected: 3000+3000+4000 == 10000 and ledger == order counter
+----------------------------------------------------------------------
+.                                                                        [100%]
+============================== warnings summary ===============================
+tests/test_amount.py::test_multiple_partial_refunds
+  C:\Users\aubor\.workbuddy\binaries\python\envs\default\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 1 warning in 0.62s
+----------------------------------------------------------------------
+# exit code: 0
+
+$ pytest tests/test_amount.py::test_over_refund_is_rejected
+# R1-T02 over-refund refused
+# expected: second 6000 refund refused, counter stays at 6000
+----------------------------------------------------------------------
+.                                                                        [100%]
+============================== warnings summary ===============================
+tests/test_amount.py::test_over_refund_is_rejected
+  C:\Users\aubor\.workbuddy\binaries\python\envs\default\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 1 warning in 1.18s
+----------------------------------------------------------------------
+# exit code: 0
+
+$ pytest tests/test_amount.py::test_single_refund_larger_than_paid_amount_is_rejected
+# R1-T03 single refund larger than paid amount refused
+# expected: 9000 against a 5000 order is refused, counter stays 0
+----------------------------------------------------------------------
+.                                                                        [100%]
+============================== warnings summary ===============================
+tests/test_amount.py::test_single_refund_larger_than_paid_amount_is_rejected
+  C:\Users\aubor\.workbuddy\binaries\python\envs\default\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+1 passed, 1 warning in 0.46s
+----------------------------------------------------------------------
+# exit code: 0

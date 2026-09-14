@@ -1,0 +1,81 @@
+{
+  "round": "R4",
+  "tests": [
+    {
+      "id": "R4-T01",
+      "name": "race regression: same after-sale concurrent execution",
+      "command": "pytest tests/test_concurrency.py::test_concurrent_same_after_sale",
+      "expected": "the fix holds under the race that the review comment describes",
+      "result": "PASS"
+    },
+    {
+      "id": "R4-T02",
+      "name": "race regression: cumulative amount check under concurrency",
+      "command": "pytest tests/test_concurrency.py::test_concurrent_multiple_after_sales",
+      "expected": "the cumulative-amount check is not check-then-write either",
+      "result": "PASS"
+    },
+    {
+      "id": "R4-T03",
+      "name": "amount regression after the fix",
+      "command": "pytest tests/test_amount.py::test_over_refund_is_rejected",
+      "expected": "the minimal fix did not break the sequential amount invariant",
+      "result": "PASS"
+    }
+  ],
+  "evidence": [
+    {
+      "id": "R4-E01",
+      "type": "TEST",
+      "source": "R4-T01",
+      "supports": [
+        "FD-05",
+        "AQ-01"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R4-E02",
+      "type": "TEST",
+      "source": "R4-T02",
+      "supports": [
+        "FD-03",
+        "TE-02"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R4-E03",
+      "type": "TEST",
+      "source": "R4-T03",
+      "supports": [
+        "TE-02"
+      ],
+      "result": "PASS"
+    },
+    {
+      "id": "R4-E04",
+      "type": "REVIEW",
+      "source": "round-evidence/R4/reviewer.md",
+      "supports": [
+        "TE-01"
+      ],
+      "result": "NOT_APPLICABLE"
+    }
+  ],
+  "rubrics": [
+    {
+      "id": "TE-02",
+      "result": "PASS",
+      "evidence": [
+        "R4-E02",
+        "R4-E03"
+      ]
+    },
+    {
+      "id": "TE-01",
+      "result": "NOT_APPLICABLE",
+      "evidence": []
+    }
+  ]
+}
