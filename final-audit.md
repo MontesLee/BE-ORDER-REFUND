@@ -11,7 +11,7 @@
 **PASS WITH FOLLOW-UP**
 
 题目、参考解、测试体系、Rubric、证据链已达交付标准，可**直接进入真实 Tlabel Model Trial 阶段**。
-唯一未完成的环节是**真实模型 Trial 本身**——这是流程性的"尚未执行"，不是设计缺陷。
+唯一未完成的环节是**真实模型 Trial 本身**——Trial 已真实启动（3 个模型跑到 R0/R1）但因账号级模型配额（HTTP 429）中断，这是执行环境限制，不是设计缺陷。
 
 ---
 
@@ -104,7 +104,7 @@ R0 项目启动 → R1 细节补充(部分退款) → R2 需求改变(幂等) �
 | golden_answer | **PASS** | clean environment 可运行，`verify.sh` 退出码 0 |
 | rubric | **PASS** | 22 条原子细则，字段符合 Tlabel（含 `round` 单一轮次） |
 | evidence | **PASS** | 双向追溯 + 不变量链路 + 覆盖自检 |
-| model evaluation | **PENDING REAL TRIAL** | 尚未执行，未伪造 |
+| model evaluation | **INCOMPLETE** | 真实 Trial 已启动并跑到 R0/R1，被模型配额 429 阻断；留痕见 `evaluation/_trial-incomplete/`；未伪造 |
 
 ---
 
@@ -127,7 +127,7 @@ R0 项目启动 → R1 细节补充(部分退款) → R2 需求改变(幂等) �
 
 ## 8. Next Required Step
 
-**最大的剩余问题不是 Benchmark 设计，而是真实 Coding Agent Trial 尚未执行。**
+**最大的剩余问题不是 Benchmark 设计，而是真实 Coding Agent Trial 尚未跑完**——它已启动并在 R0/R1 后被模型配额 429 中断，见 `evaluation/_trial-incomplete/TRIAL-RUN-LOG.md`。
 
 ```
 1.  CodeBuddy 创建独立 workspace

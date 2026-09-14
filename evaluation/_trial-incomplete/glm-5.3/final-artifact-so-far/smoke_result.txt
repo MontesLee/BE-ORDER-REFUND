@@ -1,0 +1,8 @@
+GET /health -> 200 {"status":"ok"}
+POST /orders -> 201 total=398.0
+pay -> 200 PAID
+after-sale -> 201 PENDING_REVIEW
+approve -> 200 APPROVED
+refund -> 200 REFUNDED
+order status -> 200 REFUNDED
+SMOKE OK

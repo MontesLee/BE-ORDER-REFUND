@@ -1,9 +1,11 @@
 # evaluation — 真实模型 Trial 结果存放区
 
-> **本目录当前不含任何模型结果。**
-> 至本文件写入时，`BE-ORDER-REFUND` **尚未执行任何真实 Coding Agent Trial**，
-> 因此没有任何模型名、模型版本、`trace_id`、模型产出或模型 PASS / FAIL。
-> **本目录中的一切内容都必须在真实 Trial 发生后由实测填写，不得伪造。**
+> **本目录当前不含任何模型的完整结果。**
+> 真实 Trial 已于 2026-09-14 起真实执行到 R0/R1，随后被账号级模型配额（HTTP 429）阻断，
+> **未到达 R9**，故仍无任何模型的完整 PASS / FAIL、维度得分或分层结论。
+> 已发生的真实进展（三个模型的产物快照、模型亲笔留痕、评测方复跑核验）保存在
+> `_trial-incomplete/`，那里刻意**不使用** `final-artifact/` 等完成态命名。
+> **本目录（`<MODEL>/`）中的一切内容都必须在 Trial 真正跑完 R9 后由实测填写，不得伪造。**
 
 ---
 
@@ -26,7 +28,7 @@
 │ Model Evidence              │  回答：某个 Coding Agent 跑完 R0–R9 后是否满足 Rubric？
 │ evaluation/<model>/         │
 │   trace.md                  │  → 只能由真实 Trial 产生
-│   result.md                 │  → 当前：尚未执行（PENDING REAL TRIAL）
+│   result.md                 │  → 当前：未完成（INCOMPLETE — 见 _trial-incomplete/）
 │   final-artifact/           │
 │   evidence.md               │
 └─────────────────────────────┘

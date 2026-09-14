@@ -450,9 +450,12 @@ BE-ORDER-REFUND/
 
 **区分度实测口径**：题目锁定后必须用给定模型实测（HY3 / model_c / model_d；正式评测可用 Hy 3、Kimi 3、deepseek v4 flash、Claude Opus 5），确认至少在一个核心不变量或关键设计决策上出现分层。**未完成实测不得入库。**
 
-> 本包当前状态：**已就绪，待实测**。上述第 1–7 步尚未执行，`evaluation/` 中除
-> `README.md` 与 `_TEMPLATE/` 外为空——**不伪造任何模型结果**。Golden Answer
-> 验证（题目与参考答案可执行、可判定）已完成，见 `evaluation-report.md` §5。
+> 本包当前状态：**已进入真实 Model Trial，未完成**。上述第 1–7 步**已开始执行**：
+> 3 个模型已从 `init/` 起真实跑通 R0/R1，随后被账号级模型配额（HTTP 429）阻断，未到达 R9；
+> 真实进展、配额事件与已发现缺陷见 `evaluation/_trial-incomplete/TRIAL-RUN-LOG.md`。
+> **不伪造任何模型结果**——因此 `evaluation/<MODEL>/` 仍未建立，也没有任何模型的完整
+> PASS / FAIL。Golden Answer 验证（题目与参考答案可执行、可判定）已完成，见
+> `evaluation-report.md` §5。
 
 ---
 

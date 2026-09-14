@@ -9,7 +9,12 @@
 > | 类别 | 本报告中的位置 | 状态 |
 > | --- | --- | --- |
 > | **Golden Answer Validation**（题目与参考答案是否可执行、可判定） | §2 底线检查 · §3 出题评分 · §4 变异测试 · §5 验证结果 · §6 覆盖 | **已完成** |
-> | **Real Model Trial**（某模型跑完 R0–R9 后是否满足 Rubric） | —— | **尚未执行** |
+> | **Real Model Trial**（某模型跑完 R0–R9 后是否满足 Rubric） | —— | **已启动，未完成（INCOMPLETE）** |
+>
+> 关于该行：真实 Trial 已于 2026-09-14 启动——3 个模型真实跑通 R0/R1 后被账号级模型配额
+> （HTTP 429）阻断，未到达 R9。全部真实进展、配额事件与已发现缺陷见
+> `evaluation/_trial-incomplete/TRIAL-RUN-LOG.md`。
+> **因未到达 R9，本报告不给出任何模型判定、维度得分或分层结论。**
 >
 > 因此：**`Rubric PASS` ≠ `Golden Answer PASS` ≠ `Model PASS`**。
 > 本报告不包含任何模型名、模型版本、`trace_id`、模型产出或模型的 PASS / FAIL，
@@ -24,7 +29,7 @@
 | --- | --- |
 | `README.md` | 仓库说明：状态、六条不变量、文件结构、快速开始、实测结果、已知限制 |
 | `instruction.md` | 题目说明：核心矛盾、六条不变量、状态机、统一接口契约、R0–R9 Prompt 原文、每轮评分边界、失效模式清单、交付物与评测流程 |
-| `introduction.md` | 题目与模型表现简述（模型列待实测填写） |
+| `introduction.md` | 题目与模型表现简述（模型列待续跑完成后填写） |
 | `rubric.md` | 22 条原子 Rubric + 逐条 Verification + 基线判定 + 计分公式 |
 | `evidence-matrix.md` | Rubric → Evidence → Test 双向追溯矩阵 + 六条不变量链路 |
 | `golden_answer/` | 完整可运行参考实现（8 个模块）+ 22 个测试 + `verify.sh` + `verify_doc/` |
@@ -211,8 +216,8 @@
 | 测试套 | 22 个节点，T01–T18 全覆盖，6/6 分类覆盖，并发跨进程、失败确定性 |
 | 区分度 | 变异测试 6/6 杀死；失效模式与用例一一对应 |
 | Rubric | 22 条原子细则，20 条有证据 PASS，2 条待实测 Trace；`round` 字段 22/22 为单一最后相关轮次 |
-| **模型评测** | **未执行（PENDING REAL TRIAL）**——无任何模型名 / `trace_id` / 模型 PASS-FAIL；模板已就绪于 `evaluation/README.md` |
-| 交付就绪度 | **可以进入真实 Model Trial 阶段**；待补动作是用 HY3 / model_c / model_d 完成实测并填写 `evaluation/<model>/` 与模型列 |
+| **模型评测** | **未完成（INCOMPLETE）**——3 个真实模型已跑通 R0/R1 后被账号级模型配额（HTTP 429）阻断，未到 R9；仍无任何模型的完整 PASS / FAIL。留痕见 `evaluation/_trial-incomplete/` |
+| 交付就绪度 | **已进入真实 Model Trial 阶段（未完成）**；Trial 已真实启动并跑到 R0/R1，待补动作是在配额窗口内续跑 R2–R9，再填写 `evaluation/<MODEL>/` 与模型列 |
 
 > 最后一行是本次交付的定位：**让 `BE-ORDER-REFUND` 达到"可直接进入真实 Model Trial"的状态，
 > 而不是假装已经完成 Model Trial。**

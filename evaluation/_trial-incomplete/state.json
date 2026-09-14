@@ -1,0 +1,70 @@
+{
+  "generated": "2026-09-14T13:23:54",
+  "benchmark": "BE-ORDER-REFUND",
+  "trial_status": "INCOMPLETE - blocked by account-level model quota (HTTP 429)",
+  "rounds_completed": {
+    "HY3": [
+      "R0",
+      "R1"
+    ],
+    "model_c": [
+      "R0",
+      "R1"
+    ],
+    "model_d": [
+      "R0"
+    ]
+  },
+  "models": {
+    "HY3": {
+      "slug": "hy3",
+      "display": "Hy3",
+      "artifact_files": 7,
+      "trace_files": 1,
+      "sha256_16": {
+        "app.py": "c049cb6ab84783e4",
+        "models.py": "2c9566c38100d975",
+        "README.md": "84140f3a1a283afc",
+        "requirements.txt": "cc6c0c3778cb3966",
+        "schemas.py": "59177c7d4e4e0e83",
+        "store.py": "fb2e8b3e7fc7b8f7",
+        "tests\\test_api.py": "0d4014aa78050233"
+      }
+    },
+    "model_c": {
+      "slug": "kimi-k3",
+      "display": "Kimi-K3",
+      "artifact_files": 8,
+      "trace_files": 2,
+      "sha256_16": {
+        "app\\__init__.py": "e3b0c44298fc1c14",
+        "app\\main.py": "6b70c1610515060f",
+        "app\\models.py": "650f4127c6bccf4f",
+        "app\\service.py": "ffb34d8eac0839cd",
+        "pytest.ini": "c809c969ec7e11b9",
+        "README.md": "b2d30c634bbf5136",
+        "requirements.txt": "5e9ced716190a7ba",
+        "tests\\test_api.py": "7e37e38d391d3f45"
+      }
+    },
+    "model_d": {
+      "slug": "glm-5.3",
+      "display": "GLM-5.3",
+      "artifact_files": 11,
+      "trace_files": 1,
+      "sha256_16": {
+        "app\\__init__.py": "e3b0c44298fc1c14",
+        "app\\main.py": "e84bb1a74f94485b",
+        "app\\models.py": "51da2e1c5ed65bf3",
+        "app\\service.py": "bfcd21248a458396",
+        "app\\store.py": "076285fa25d048f5",
+        "README.md": "b7e15d921d89cd7e",
+        "requirements.txt": "f917dde9c68c9b0f",
+        "smoke_result.txt": "f61ba9026cd4441c",
+        "smoke_test.py": "9bfa0376d3b8ab3d",
+        "tests\\__init__.py": "e3b0c44298fc1c14",
+        "tests\\test_api.py": "6977a60640569ac1"
+      }
+    }
+  }
+}

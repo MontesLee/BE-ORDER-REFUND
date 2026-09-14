@@ -44,7 +44,7 @@ BE-ORDER-REFUND/
 | --- | --- |
 | `init/` 项目初始态 | `init/`（空） |
 | `golden_answer/` | `golden_answer/`（含 `verify_doc/`，即 README、可执行测试套、运行日志） |
-| `model_A_name/` 等模型产物 | `evaluation/<model>/`（`trace.md` / `result.md` / `final-artifact/` / `evidence.md`）；**待实测后创建，当前不存在任何模型目录** |
+| `model_A_name/` 等模型产物 | `evaluation/<MODEL>/`（`trace.md` / `result.md` / `final-artifact/` / `evidence.md`）；**未跑完 R9，故尚未创建**；已发生的真实进展存于 `evaluation/_trial-incomplete/`（刻意不使用 `final-artifact/` 命名） |
 | `introduction.md` | 本文件（§4 模型表现表） |
 | 其他留痕 | `round-evidence/`、`evidence-matrix.md`、`evaluation-report.md` |
 
@@ -52,7 +52,7 @@ BE-ORDER-REFUND/
 
 ## 3. Golden Answer 基线（已完成实测；**不是模型评测结果**）
 
-> 本节只证明"题目 + 参考答案可执行、可判定"。**模型评测尚未执行**，
+> 本节只证明"题目 + 参考答案可执行、可判定"。**模型评测尚未跑完**（已启动并在 R0/R1 后被配额中断），
 > 模型结果须由 `evaluation/<model>/` 的实测留痕产生（见 `evaluation/README.md`）。
 
 | 指标 | 结果 | 证据 |
@@ -68,10 +68,13 @@ BE-ORDER-REFUND/
 
 ## 4. 各模型表现简述
 
-> **状态：待实测填写。** 按试标规则 §3.2，题目锁定后须用给定模型实测确认区分度。
-> 本次试标模型：**HY3、model_c、model_d**（正式评测可用 Hy 3、Kimi 3、
-> deepseek v4 flash、Claude Opus 5）。
-> **没有真实模型 Trace 之前，本表不填任何结论**（不允许伪造）。
+> **状态：Trial 已启动，未完成。** 按试标规则 §3.2，题目锁定后须用给定模型实测确认区分度。
+> 本次**实际执行**的模型：**Hy3（`hy3`）、Kimi-K3（`kimi-k3-1`）、GLM-5.3（`glm-5.3`）**——
+> 占位名 `HY3` / `model_c` / `model_d` 中，`HY3` 与出厂名一致，后两者按试标规则
+> 「使用实际可选模型名称」解析为 Kimi-K3 与 GLM-5.3。
+> 3 个模型均已从 `init/` 起真实跑通 R0/R1，随后被账号级模型配额（HTTP 429）阻断，未到 R9。
+> 真实进展见 `evaluation/_trial-incomplete/TRIAL-RUN-LOG.md`。
+> **未跑完 R9 之前，本表不填任何模型判定结论**（不允许伪造）。
 
 ### 4.1 逐轮关键判定
 

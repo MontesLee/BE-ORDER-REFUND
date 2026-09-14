@@ -203,7 +203,7 @@ R9 不新增维度，只做全量历史回归。后续轮次可以检查历史�
 > ```
 > Golden Answer Validation      ← 本节内容：证明题目与参考答案可执行、可判定
 >         ↓（完成这一步 ≠ 完成模型评测）
-> Real Model Trial              ← 尚未执行
+> Real Model Trial              ← 已启动，未完成（3 模型跑到 R0/R1，被配额 429 中断）
 >         ↓
 > Model Trace + Final Artifact
 >         ↓
